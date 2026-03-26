@@ -280,8 +280,11 @@ async function fetchSheet(s){
   for(let i=1;i<rows.length;i++){
     const c=rows[i];
     if(!c[0]||c[0]==='-') continue;
-    const wa=pN(c[5+s.off]), wp=pN(c[6+s.off]);
+    // (산업)기사: A0 B1 C2 D3 E4(시험일) F5(필기응시) G6(합격자) H7(합격률) I8(실기응시) J9(실기합격) K10
+    // 기능사/기능장: A0 B1 C2 D3 E4(필기응시) F5(합격자) G6(합격률) H7(실기응시) I8(실기합격) J9
+    const wa=pN(c[4+s.off]), wp=pN(c[5+s.off]);
     const pa=pN(c[7+s.off]), pp=pN(c[8+s.off]);
+    if(!wa && !pa) continue;
     result.push({
       category:s.category, name:c[0].trim(),
       year:pY(c[1]), round:(c[2]||'').trim(), type:(c[3]||'PBT').trim(),
@@ -428,9 +431,10 @@ function render(){
 
   const pts=viewMode==='year'
     ?aggregateByYear(data)
-    :data.map(d=>({...d,wa:d.written_applicants,wp:d.written_passed,pa:d.practical_applicants,pp:d.practical_passed,label:`${d.year} ${d.round}`}));
+    :data.map(d=>({...d,wa:d.written_applicants,wp:d.written_passed,pa:d.practical_applicants,pp:d.practical_passed,
+      label:`'${d.year.slice(2)}-${d.round}`}));
 
-  const labels=pts.map(d=>d.label);
+  const labels=pts.map(d=>viewMode==='year'?d.year:d.label);
   const tWA=pts.reduce((s,d)=>s+d.wa,0), tWP=pts.reduce((s,d)=>s+d.wp,0);
   const tPA=pts.reduce((s,d)=>s+d.pa,0), tPP=pts.reduce((s,d)=>s+d.pp,0);
   const aWR=tWA>0?(tWP/tWA*100).toFixed(1):0;
