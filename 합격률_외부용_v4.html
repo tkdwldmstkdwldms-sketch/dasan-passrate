@@ -246,9 +246,9 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 const SHEET_ID = '1qCU0FtcjAd6aiWuF_6Dkpr3qzGyr73SthFDiQDW44_8';
 const API_KEY  = 'AIzaSyB4_Sd9-nCuZd1cd4BIoGuRhwIIcOq-8UA';
 const SHEET_DEFS = [
-  {name:'(산업)기사', category:'(산업)기사', off:1},
-  {name:'기능사',      category:'기능사',     off:0},
-  {name:'기능장',      category:'기능장',     off:0},
+  {name:'(산업)기사', category:'(산업)기사', wa:5, wp:6, pa:8, pp:9},
+  {name:'기능사',      category:'기능사',     wa:5, wp:6, pa:8, pp:9},
+  {name:'기능장',      category:'기능장',     wa:5, wp:6, pa:8, pp:9},
 ];
 
 let RAW = [];
@@ -280,10 +280,10 @@ async function fetchSheet(s){
   for(let i=1;i<rows.length;i++){
     const c=rows[i];
     if(!c[0]||c[0]==='-') continue;
-    // (산업)기사: A0 B1 C2 D3 E4(시험일) F5(필기응시) G6(합격자) H7(합격률) I8(실기응시) J9(실기합격) K10
-    // 기능사/기능장: A0 B1 C2 D3 E4(필기응시) F5(합격자) G6(합격률) H7(실기응시) I8(실기합격) J9
-    const wa=pN(c[4+s.off]), wp=pN(c[5+s.off]);
-    const pa=pN(c[7+s.off]), pp=pN(c[8+s.off]);
+    // (산업)기사: c[5]=필기응시 c[6]=필기합격 c[8]=실기응시 c[9]=실기합격
+    // 기능사/기능장: c[4]=필기응시 c[5]=필기합격 c[7]=실기응시 c[8]=실기합격
+    const wa=pN(c[s.wa]), wp=pN(c[s.wp]);
+    const pa=pN(c[s.pa]), pp=pN(c[s.pp]);
     if(!wa && !pa) continue;
     result.push({
       category:s.category, name:c[0].trim(),
