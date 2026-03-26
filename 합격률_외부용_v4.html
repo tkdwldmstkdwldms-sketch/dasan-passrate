@@ -246,9 +246,9 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 const SHEET_ID = '1qCU0FtcjAd6aiWuF_6Dkpr3qzGyr73SthFDiQDW44_8';
 const API_KEY  = 'AIzaSyB4_Sd9-nCuZd1cd4BIoGuRhwIIcOq-8UA';
 const SHEET_DEFS = [
-  {name:'(산업)기사 테이블', category:'(산업)기사', off:1},
-  {name:'기능사 테이블',      category:'기능사',     off:0},
-  {name:'기능장 테이블',      category:'기능장',     off:0},
+  {name:'(산업)기사', category:'(산업)기사', off:1},
+  {name:'기능사',      category:'기능사',     off:0},
+  {name:'기능장',      category:'기능장',     off:0},
 ];
 
 let RAW = [];
@@ -270,8 +270,8 @@ function pY(v){ return String(v||'').replace('년','').trim(); }
 function fmt(n){ if(!n)return'0'; if(n>=10000)return(n/10000).toFixed(1)+'만'; if(n>=1000)return(n/1000).toFixed(1)+'천'; return n.toLocaleString(); }
 
 async function fetchSheet(s){
-  const range = encodeURIComponent(s.name);
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
+  const range = "'" + s.name + "'";
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`;
   const res = await fetch(url);
   if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||res.status); }
   const json = await res.json();
