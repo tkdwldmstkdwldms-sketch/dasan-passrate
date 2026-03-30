@@ -310,7 +310,7 @@ const SHEET_DEFS=[
   {name:'기능사',category:'기능사'},
   {name:'기능장',category:'기능장'},
 ];
-const COL={wa:5,wp:6,pa:8,pp:9};
+const COL={wa:5,wp:6,pa:8,pp:9,note:11};
 const CATS={
   '(산업)기사':['전기기사','전기산업기사','전기공사기사','전기공사산업기사','소방설비기사(전기)','소방설비기사(기계)','소방설비산업기사(전기)','소방설비산업기사(기계)'],
   '기능사':['전기기능사'],
@@ -323,7 +323,12 @@ let selectedType='all',viewMode='year',currentTab='chart';
 let fromIdx=0,toIdx=0;
 let chartLine=null,chartBar=null;
 
-function pN(v){const s=String(v||'').replace(/[, ]/g,'').trim();if(!s||s==='-')return 0;return parseFloat(s)||0;}
+// 빈셀/'-' → null(미시행), '0' or 숫자 → 숫자값
+function pN(v){
+  const s=String(v??'').replace(/[, ]/g,'').trim();
+  if(!s||s==='-') return null;
+  return parseFloat(s)||0;
+}
 function pY(v){return String(v||'').replace('년','').trim();}
 function fmt(n){if(!n)return'0';if(n>=10000)return(n/10000).toFixed(1)+'만';if(n>=1000)return(n/1000).toFixed(1)+'천';return n.toLocaleString();}
 
@@ -339,13 +344,16 @@ async function fetchSheet(s){
     if(!c[0]||c[0]==='-') continue;
     const wa=pN(c[COL.wa]),wp=pN(c[COL.wp]);
     const pa=pN(c[COL.pa]),pp=pN(c[COL.pp]);
+    const note=(c[COL.note]||'').trim();
+    // wa/pa가 null이면 미시행(차트에서 null처리), 0이면 0%
+    const writtenRate=wa===null?null:(wa>0?+((wp/wa)*100).toFixed(1):0);
+    const practicalRate=pa===null?null:(pa>0?+((pp/pa)*100).toFixed(1):0);
     result.push({
       category:s.category,name:c[0].trim(),
       year:pY(c[1]),round:(c[2]||'').trim(),type:(c[3]||'PBT').trim(),
-      written_applicants:wa,written_passed:wp,
-      written_rate:wa>0?+((wp/wa)*100).toFixed(1):0,
-      practical_applicants:pa,practical_passed:pp,
-      practical_rate:pa>0?+((pp/pa)*100).toFixed(1):0,
+      written_applicants:wa,written_passed:wp,written_rate:writtenRate,
+      practical_applicants:pa,practical_passed:pp,practical_rate:practicalRate,
+      note,
     });
   }
   return result;
@@ -610,10 +618,14 @@ function renderChart(){
 
   const pts=viewMode==='year'
     ?aggByYear(data)
-    :data.map(d=>({...d,wa:d.written_applicants,wp:d.written_passed,pa:d.practical_applicants,pp:d.practical_passed,label:`'${d.year.slice(2)}-${d.round}`}));
+    :data.map(d=>({...d,
+        wa:d.written_applicants,wp:d.written_passed,
+        pa:d.practical_applicants,pp:d.practical_passed,
+        label:`'${d.year.slice(2)}-${d.round}`}));
   const labels=pts.map(d=>viewMode==='year'?d.year:d.label);
-  const tWA=pts.reduce((s,d)=>s+d.wa,0),tWP=pts.reduce((s,d)=>s+d.wp,0);
-  const tPA=pts.reduce((s,d)=>s+d.pa,0),tPP=pts.reduce((s,d)=>s+d.pp,0);
+  // null 제외하고 합산 (미시행 제외)
+  const tWA=pts.reduce((s,d)=>s+(d.wa||0),0),tWP=pts.reduce((s,d)=>s+(d.wp||0),0);
+  const tPA=pts.reduce((s,d)=>s+(d.pa||0),0),tPP=pts.reduce((s,d)=>s+(d.pp||0),0);
   const aWR=tWA>0?((tWP/tWA)*100).toFixed(1):0;
   const aPR=tPA>0?((tPP/tPA)*100).toFixed(1):0;
   const typeLabel=selectedType==='all'?'전체':selectedType;
@@ -681,11 +693,24 @@ function renderChart(){
   chartLine=new Chart(document.getElementById('chartLine').getContext('2d'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'필기 합격률',data:pts.map(d=>d.wa>0?d.written_rate:null),borderColor:'#0091db',backgroundColor:'rgba(0,145,219,0.07)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#0091db',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false},
-      {label:'실기 합격률',data:pts.map(d=>d.pa>0?d.practical_rate:null),borderColor:'#e8412e',backgroundColor:'rgba(232,65,46,0.05)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#e8412e',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false}
+      {label:'필기 합격률',data:pts.map(d=>d.wa===null?null:d.written_rate),borderColor:'#0091db',backgroundColor:'rgba(0,145,219,0.07)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#0091db',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false},
+      {label:'실기 합격률',data:pts.map(d=>d.pa===null?null:d.practical_rate),borderColor:'#e8412e',backgroundColor:'rgba(232,65,46,0.05)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#e8412e',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1a1d23',bodyColor:'#4a5068',borderColor:'#e2e5eb',borderWidth:1,padding:10,callbacks:{label:ctx=>ctx.parsed.y===null?null:` ${ctx.dataset.label}: ${ctx.parsed.y}%`}}},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1a1d23',bodyColor:'#4a5068',borderColor:'#e2e5eb',borderWidth:1,padding:10,
+        callbacks:{
+          label:ctx=>{
+            if(ctx.parsed.y===null) return null;
+            return ` ${ctx.dataset.label}: ${ctx.parsed.y}%`;
+          },
+          afterBody:(items)=>{
+            const idx=items[0]?.dataIndex;
+            if(idx===undefined) return [];
+            const note=pts[idx]?.note;
+            return note?[``,`📌 ${note}`]:[];
+          }
+        }
+      }},
       scales:{
         x:{grid:{color:gc},ticks:{maxRotation:45,minRotation:0,font:{size:10}}},
         y:{grid:{color:gc},min:0,max:100,ticks:{callback:v=>v+'%'},position:'left'},
@@ -697,13 +722,26 @@ function renderChart(){
   chartBar=new Chart(document.getElementById('chartBar').getContext('2d'),{
     type:'bar',
     data:{labels,datasets:[
-      {label:'필기 응시자',data:pts.map(d=>d.wa>0?d.wa:null),backgroundColor:'#0091db',borderRadius:3,borderSkipped:false},
-      {label:'필기 합격자',data:pts.map(d=>d.wp>0?d.wp:null),backgroundColor:'#66c2f0',borderRadius:3,borderSkipped:false},
-      {label:'실기 응시자',data:pts.map(d=>d.pa>0?d.pa:null),backgroundColor:'#e8412e',borderRadius:3,borderSkipped:false},
-      {label:'실기 합격자',data:pts.map(d=>d.pp>0?d.pp:null),backgroundColor:'#f4967e',borderRadius:3,borderSkipped:false},
+      {label:'필기 응시자',data:pts.map(d=>d.wa===null?null:d.wa),backgroundColor:'#0091db',borderRadius:3,borderSkipped:false},
+      {label:'필기 합격자',data:pts.map(d=>d.wp===null?null:d.wp),backgroundColor:'#66c2f0',borderRadius:3,borderSkipped:false},
+      {label:'실기 응시자',data:pts.map(d=>d.pa===null?null:d.pa),backgroundColor:'#e8412e',borderRadius:3,borderSkipped:false},
+      {label:'실기 합격자',data:pts.map(d=>d.pp===null?null:d.pp),backgroundColor:'#f4967e',borderRadius:3,borderSkipped:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1a1d23',bodyColor:'#4a5068',borderColor:'#e2e5eb',borderWidth:1,padding:10,callbacks:{label:ctx=>ctx.parsed.y===null?null:` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}명`}}},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1a1d23',bodyColor:'#4a5068',borderColor:'#e2e5eb',borderWidth:1,padding:10,
+        callbacks:{
+          label:ctx=>{
+            if(ctx.parsed.y===null) return null;
+            return ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}명`;
+          },
+          afterBody:(items)=>{
+            const idx=items[0]?.dataIndex;
+            if(idx===undefined) return [];
+            const note=pts[idx]?.note;
+            return note?[``,`📌 ${note}`]:[];
+          }
+        }
+      }},
       scales:{
         x:{grid:{color:gc},ticks:{maxRotation:45,minRotation:0,font:{size:10}}},
         y:{grid:{color:gc},ticks:{callback:v=>fmt(v)},position:'left'},
@@ -953,14 +991,23 @@ async function captureCard(){
 function aggByYear(data){
   const map={};
   data.forEach(d=>{
-    if(!map[d.year]) map[d.year]={year:d.year,wa:0,wp:0,pa:0,pp:0};
-    map[d.year].wa+=d.written_applicants;map[d.year].wp+=d.written_passed;
-    map[d.year].pa+=d.practical_applicants;map[d.year].pp+=d.practical_passed;
+    if(!map[d.year]) map[d.year]={year:d.year,wa:null,wp:null,pa:null,pp:null,note:''};
+    // null이면 미시행 - 같은 연도 다른 회차에 값 있으면 그걸 씀
+    if(d.written_applicants!==null){
+      map[d.year].wa=(map[d.year].wa||0)+d.written_applicants;
+      map[d.year].wp=(map[d.year].wp||0)+(d.written_passed||0);
+    }
+    if(d.practical_applicants!==null){
+      map[d.year].pa=(map[d.year].pa||0)+d.practical_applicants;
+      map[d.year].pp=(map[d.year].pp||0)+(d.practical_passed||0);
+    }
+    if(d.note) map[d.year].note=(map[d.year].note?map[d.year].note+' / ':'')+d.note;
   });
   return Object.values(map).sort((a,b)=>a.year.localeCompare(b.year)).map(d=>({
     ...d,
-    written_rate:d.wa>0?+((d.wp/d.wa)*100).toFixed(1):0,
-    practical_rate:d.pa>0?+((d.pp/d.pa)*100).toFixed(1):0,label:d.year
+    written_rate:d.wa===null?null:(d.wa>0?+((d.wp/d.wa)*100).toFixed(1):0),
+    practical_rate:d.pa===null?null:(d.pa>0?+((d.pp/d.pa)*100).toFixed(1):0),
+    label:d.year
   }));
 }
 
