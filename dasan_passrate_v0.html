@@ -274,10 +274,11 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
           <select class="round-select" id="selYear" onchange="onYearSelect()">
             <option value="">연도 선택</option>
           </select>
-          <select class="round-select" id="selRound" onchange="onRoundSelect()">
+          <select class="round-select" id="selRound">
             <option value="">회차 선택</option>
           </select>
         </div>
+        <button id="searchBtn" onclick="onSearchClick()" style="margin-top:10px;width:100%;padding:8px;border-radius:8px;border:none;background:var(--dasan);color:#fff;font-size:12px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s">조회하기</button>
       </div>
       <div class="sidebar-bottom">
         <div class="view-label" id="roundLabel" style="font-size:11px;color:var(--text-muted)">종목 선택 후 연도·회차를 고르세요</div>
@@ -563,14 +564,28 @@ function updateRoundOptions(){
 }
 
 function onYearSelect(){
+  // 연도 바뀌면 회차 초기화
   updateRoundOptions();
-  updateRoundLabel();
-  // 연도만 바꿨을 땐 render 안 함
+  document.getElementById('roundLabel').textContent=
+    selectedNames.size>0?`${selectedNames.size}개 종목 선택됨`:'종목 선택 후 연도·회차를 고르세요';
+  // 콘텐츠도 초기화
+  showEmpty();
 }
 
-function onRoundSelect(){
+function onSearchClick(){
+  const yr=document.getElementById('selYear').value;
+  const rd=document.getElementById('selRound').value;
+  if(!selectedNames.size){
+    alert('종목을 선택해주세요.');return;
+  }
+  if(!yr){
+    alert('연도를 선택해주세요.');return;
+  }
+  if(!rd){
+    alert('회차를 선택해주세요.');return;
+  }
   updateRoundLabel();
-  if(selectedNames.size>0) render();
+  renderRound();
 }
 
 function render(){
