@@ -6,13 +6,13 @@
 <title>국가기술자격 합격률 현황 | 다산에듀 교육연구소</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --white:#fff;--bg:#f5f6f8;--bg2:#eef0f4;
   --border:#e2e5eb;--border-light:#f0f2f5;
   --text:#1a1d23;--text-sub:#4a5068;--text-muted:#8b92a8;
-  --dasan:#0091db;
+  --dasan:#0091db;--dasan-dark:#0071aa;--dasan-light:#33b3f0;
   --brand:#1a3a6b;--brand-mid:#2952a3;--brand-light:#4a7fd4;--brand-pale:#edf2fb;
   --accent:#e8412e;--green:#1a9e5e;
   --pbt:#2952a3;--cbt:#e8412e;--all:#6b4fd4;
@@ -23,21 +23,21 @@
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 
 /* NAV */
-.topnav{background:linear-gradient(135deg,#0071aa 0%,var(--dasan) 60%,#33b3f0 100%);flex-shrink:0;box-shadow:0 2px 12px rgba(0,100,180,.3)}
+.topnav{background:linear-gradient(135deg,var(--dasan-dark) 0%,var(--dasan) 60%,var(--dasan-light) 100%);flex-shrink:0;box-shadow:0 2px 12px rgba(0,100,180,.3)}
 .topnav-inner{padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .brand-badge{width:28px;height:28px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
-.brand-name{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:900;color:#fff;letter-spacing:-.2px}
+.brand-name{font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px}
 .brand-sub{font-size:9px;color:rgba(255,255,255,.75);letter-spacing:.3px;font-weight:400}
 .nav-center{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
 .nav-badge{font-size:10px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:2px 8px;border-radius:10px}
 .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .nav-src{font-size:10px;color:rgba(255,255,255,.85);background:rgba(255,255,255,.15);padding:3px 8px;border-radius:16px;border:1px solid rgba(255,255,255,.25)}
-#copyBtn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:10px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
-#copyBtn:hover{background:rgba(255,255,255,.3)}
-#copyBtn.copied{background:var(--green);border-color:var(--green)}
+.nav-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:10px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
+.nav-btn:hover{background:rgba(255,255,255,.3)}
+.nav-btn.copied{background:var(--green);border-color:var(--green)}
 
-/* TAB BAR */
+/* TAB */
 .tab-bar{background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;padding:0 16px}
 .tab-btn{padding:10px 18px;font-size:12px;font-weight:600;font-family:'Noto Sans KR',sans-serif;border:none;background:transparent;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
 .tab-btn.active{color:var(--dasan);border-bottom-color:var(--dasan)}
@@ -48,21 +48,24 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .sidebar-section{padding:14px 14px 0}
 .sidebar-label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px}
 .sidebar-divider{height:1px;background:var(--border-light);margin:12px 0}
-.cat-label{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin:5px 0 4px}
+.cat-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.cat-label{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase}
+.cat-actions{display:flex;gap:4px}
+.cat-act-btn{font-size:9px;color:var(--dasan);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;text-decoration:underline}
 
-/* 종목 선택 - 체크박스 방식 */
-.name-list{display:flex;flex-direction:column;gap:2px}
+/* 종목 체크박스 */
+.name-list{display:flex;flex-direction:column;gap:1px}
 .name-item{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:7px;cursor:pointer;transition:background .12s;user-select:none}
 .name-item:hover{background:var(--bg)}
-.name-item.active{background:var(--brand-pale)}
+.name-item.active{background:#e8f5fb}
 .name-check{width:15px;height:15px;border:1.5px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s;background:#fff}
 .name-item.active .name-check{background:var(--dasan);border-color:var(--dasan)}
-.name-check-icon{color:#fff;font-size:10px;display:none}
-.name-item.active .name-check-icon{display:block}
+.chk-icon{color:#fff;font-size:10px;display:none}
+.name-item.active .chk-icon{display:block}
 .name-text{font-size:12px;color:var(--text-sub);font-weight:500}
-.name-item.active .name-text{color:var(--brand);font-weight:600}
+.name-item.active .name-text{color:var(--dasan-dark);font-weight:600}
 
-/* 시험유형 탭 */
+/* 유형 탭 */
 .type-tabs{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:3px}
 .ttab{flex:1;padding:5px 0;font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:600;border:none;background:transparent;border-radius:7px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--text-muted)}
 .ttab.active.all{background:#fff;color:var(--all);box-shadow:var(--shadow-sm)}
@@ -84,7 +87,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .year-ticks{display:flex;justify-content:space-between;margin-top:4px}
 .year-tick{font-size:9px;color:var(--text-muted)}
 
-/* 연도/회차 선택 (회차별합격률 탭) */
+/* select */
 .round-selects{display:flex;flex-direction:column;gap:6px}
 .round-select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:'Noto Sans KR',sans-serif;color:var(--text);background:#fff;outline:none;cursor:pointer}
 .round-select:focus{border-color:var(--dasan)}
@@ -95,16 +98,16 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .vbtn.active{background:#fff;color:var(--dasan);font-weight:700;box-shadow:var(--shadow-sm)}
 .sidebar-bottom{padding:12px 14px;border-top:1px solid var(--border-light)}
 .view-label{font-size:11px;color:var(--text-muted);margin-bottom:6px;min-height:18px}
-.view-label strong{color:var(--brand)}
+.view-label strong{color:var(--dasan-dark)}
 
 /* 콘텐츠 */
 .content-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
 
-/* KPI 카드 - 한줄 */
+/* KPI 카드 한줄 */
 .kpi-grid{display:flex;gap:10px;flex-wrap:nowrap}
 .kpi-card{flex:1;min-width:0;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.kc-blue::before{background:linear-gradient(90deg,var(--dasan),#33b3f0)}
+.kc-blue::before{background:linear-gradient(90deg,var(--dasan),var(--dasan-light))}
 .kc-red::before{background:linear-gradient(90deg,var(--accent),#f4967e)}
 .kc-green::before{background:linear-gradient(90deg,var(--green),#52d19a)}
 .kpi-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px;margin-bottom:3px}
@@ -118,8 +121,9 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .kc-green .kpi-value{color:var(--green)}
 .kpi-sub{font-size:10px;color:var(--text-muted)}
 
-/* CHARTS */
+/* 차트 */
 .chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow-sm)}
+.chart-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0}
 .chart-title{font-size:13px;font-weight:700;color:var(--text)}
 .chart-desc{font-size:10px;color:var(--text-muted);margin-top:1px}
 .chart-wrap{position:relative;height:220px;margin-top:10px}
@@ -127,42 +131,44 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted)}
 .l-bar{width:10px;height:8px;border-radius:2px}
 .l-line{width:16px;height:3px;border-radius:2px}
+.save-btn{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text-sub);font-size:10px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.save-btn:hover{background:var(--dasan);color:#fff;border-color:var(--dasan)}
 
-/* 회차별합격률 - 캡처 영역 */
+/* 회차별합격률 캡처영역 */
 .capture-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow-sm)}
-.capture-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--dasan)}
-.capture-title{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:700;color:var(--brand)}
-.capture-subtitle{font-size:11px;color:var(--text-muted);margin-top:2px}
-.capture-brand{display:flex;align-items:center;gap:6px}
-.capture-brand-name{font-size:11px;font-weight:700;color:var(--dasan);font-family:'Noto Serif KR',serif}
-.capture-brand-sub{font-size:9px;color:var(--text-muted)}
-.round-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.round-card{border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden}
-.round-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--dasan),#33b3f0)}
-.rc-name{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:8px}
+.capture-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2.5px solid var(--dasan)}
+.capture-title{font-size:16px;font-weight:800;color:var(--brand);letter-spacing:-.3px}
+.capture-subtitle{font-size:11px;color:var(--text-muted);margin-top:3px}
+.capture-brand-name{font-size:12px;font-weight:700;color:var(--dasan);text-align:right}
+.capture-brand-sub{font-size:9px;color:var(--text-muted);text-align:right;margin-top:2px}
+.round-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.round-card{border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;background:#fff}
+.round-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--dasan),var(--dasan-light))}
+.rc-name{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:6px}
 .rc-type{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;margin-bottom:6px}
-.rc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.rc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
 .rc-label{font-size:10px;color:var(--text-muted)}
 .rc-val{font-size:11px;font-weight:600;color:var(--text)}
-.rc-rate{font-size:15px;font-weight:800;color:var(--dasan);margin-top:6px;padding-top:6px;border-top:1px solid var(--border-light)}
-.rc-rate-label{font-size:10px;color:var(--text-muted);margin-top:1px}
+.rc-rate{font-size:16px;font-weight:800;color:var(--dasan);margin-top:6px;padding-top:6px;border-top:1px solid var(--border-light);display:flex;align-items:baseline;gap:5px}
+.rc-rate-label{font-size:10px;font-weight:400;color:var(--text-muted)}
+.rc-prac{margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light)}
 .rc-no-data{color:var(--text-muted);font-size:11px;text-align:center;padding:12px 0}
 .capture-footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center}
 .capture-footer-txt{font-size:10px;color:var(--text-muted)}
 .capture-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;background:var(--dasan);color:#fff;font-size:11px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
-.capture-btn:hover{background:#0071aa}
-.capture-btn:active{transform:scale(.97)}
+.capture-btn:hover{background:var(--dasan-dark)}
+.capture-btn:disabled{opacity:.6;cursor:not-allowed}
 
 /* EMPTY */
 .empty{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:48px 24px;text-align:center;box-shadow:var(--shadow-sm);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .empty-icon{font-size:40px;margin-bottom:10px;opacity:.4}
 .empty-title{font-size:14px;font-weight:700;color:var(--text-sub);margin-bottom:5px}
-.empty-desc{font-size:12px;color:var(--text-muted);line-height:1.6}
+.empty-desc{font-size:12px;color:var(--text-muted);line-height:1.6;white-space:pre-line}
 
 /* FOOTER */
 .footer{border-top:1px solid var(--border);background:#fff;padding:10px 16px;flex-shrink:0}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
-.footer-brand{font-family:'Noto Serif KR',serif;font-size:11px;font-weight:700;color:var(--dasan)}
+.footer-brand{font-size:11px;font-weight:700;color:var(--dasan)}
 .footer-copy{font-size:10px;color:var(--text-muted)}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -193,13 +199,13 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
       </div>
     </div>
     <div class="nav-center">
-      <span style="font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:#fff">국가기술자격 합격률 현황</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px">국가기술자격 합격률 현황</span>
       <span class="nav-badge">PBT · CBT</span>
       <span class="nav-badge" id="navDateBadge">📊 최신 데이터</span>
     </div>
     <div class="nav-right">
       <div class="nav-src">출처 · 한국산업인력공단</div>
-      <button id="copyBtn" onclick="copyURL()">🔗 <span>링크 복사</span></button>
+      <button id="copyBtn" class="nav-btn" onclick="copyURL()">🔗 <span>링크 복사</span></button>
     </div>
   </div>
 </nav>
@@ -211,13 +217,12 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 
 <div class="main-wrap">
   <div class="sidebar">
-    <!-- 종목 선택 -->
     <div class="sidebar-section">
       <div class="sidebar-label">종목 선택</div>
       <div id="chipArea"><div style="color:var(--text-muted);font-size:11px;padding:6px 0">로딩 중...</div></div>
     </div>
 
-    <!-- 합격률차트 탭 전용 -->
+    <!-- 합격률차트 탭 -->
     <div id="sidebarChart">
       <div class="sidebar-section">
         <div class="sidebar-divider"></div>
@@ -260,7 +265,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
       </div>
     </div>
 
-    <!-- 회차별합격률 탭 전용 -->
+    <!-- 회차별합격률 탭 -->
     <div id="sidebarRound" style="display:none">
       <div class="sidebar-section">
         <div class="sidebar-divider"></div>
@@ -275,7 +280,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
         </div>
       </div>
       <div class="sidebar-bottom">
-        <div class="view-label" id="roundLabel" style="color:var(--text-muted)">종목 선택 후 연도·회차를 고르세요</div>
+        <div class="view-label" id="roundLabel" style="font-size:11px;color:var(--text-muted)">종목 선택 후 연도·회차를 고르세요</div>
       </div>
     </div>
   </div>
@@ -305,7 +310,6 @@ const SHEET_DEFS=[
   {name:'기능장',category:'기능장'},
 ];
 const COL={wa:5,wp:6,pa:8,pp:9};
-
 const CATS={
   '(산업)기사':['전기기사','전기산업기사','전기공사기사','전기공사산업기사','소방설비기사(전기)','소방설비기사(기계)','소방설비산업기사(전기)','소방설비산업기사(기계)'],
   '기능사':['전기기능사'],
@@ -313,7 +317,7 @@ const CATS={
 };
 
 let RAW=[],YEARS=[];
-let selectedNames=new Set(); // 다중 선택
+let selectedNames=new Set();
 let selectedType='all',viewMode='year',currentTab='chart';
 let fromIdx=0,toIdx=0;
 let chartLine=null,chartBar=null;
@@ -367,7 +371,7 @@ async function loadData(){
       <div class="empty anim">
         <div class="empty-icon">⚠️</div>
         <div class="empty-title">데이터 로드 실패</div>
-        <div class="empty-desc">Google Sheets API가 활성화되어 있는지 확인해주세요.<br><small style="color:#bbb;margin-top:4px;display:block">${e.message}</small></div>
+        <div class="empty-desc">Google Sheets API 활성화 여부를 확인해주세요.\n${e.message}</div>
       </div>`;
   }
 }
@@ -375,7 +379,7 @@ async function loadData(){
 function showEmpty(){
   const msg=currentTab==='chart'
     ?'종목을 선택하면 합격률 차트가 표시됩니다.'
-    :'종목을 선택하고 연도·회차를 고르면\n합격률 카드가 표시됩니다.';
+    :'종목 선택 후 연도·회차를 고르면\n합격률 카드가 표시됩니다.';
   document.getElementById('contentArea').innerHTML=`
     <div class="empty anim">
       <div class="empty-icon">🔍</div>
@@ -393,40 +397,71 @@ function switchTab(tab){
   else showEmpty();
 }
 
-// 종목 선택 (다중)
+// 종목 목록 (체크박스 + 전체선택/해제)
 function buildChips(){
   const area=document.getElementById('chipArea');
   area.innerHTML=Object.entries(CATS).map(([cat,names])=>{
     const exist=names.filter(n=>RAW.some(d=>d.name===n));
     if(!exist.length) return '';
-    return `<div style="margin-bottom:8px">
-      <div class="cat-label">${cat}</div>
+    const catId=cat.replace(/[()]/g,'');
+    return `<div style="margin-bottom:10px">
+      <div class="cat-header">
+        <div class="cat-label">${cat}</div>
+        <div class="cat-actions">
+          <button class="cat-act-btn" onclick="selectAllCat('${cat}',true)">전체선택</button>
+          <span style="color:var(--border);font-size:9px">|</span>
+          <button class="cat-act-btn" onclick="selectAllCat('${cat}',false)">해제</button>
+        </div>
+      </div>
       <div class="name-list">${exist.map(n=>`
-        <div class="name-item" id="ni-${n.replace(/[()]/g,'')}" onclick="toggleName('${n}')">
-          <div class="name-check"><span class="name-check-icon">✓</span></div>
+        <div class="name-item" data-name="${n}" data-cat="${cat}" onclick="toggleName('${n}')">
+          <div class="name-check"><span class="chk-icon">✓</span></div>
           <span class="name-text">${n}</span>
         </div>`).join('')}</div>
     </div>`;
   }).join('');
 }
 
-function toggleName(name){
-  if(selectedNames.has(name)) selectedNames.delete(name);
-  else selectedNames.add(name);
-  // 합격률차트 탭은 단일 선택
-  if(currentTab==='chart' && selectedNames.has(name)){
-    selectedNames.clear();
-    selectedNames.add(name);
+function selectAllCat(cat, select){
+  const allNames=CATS[cat].filter(n=>RAW.some(d=>d.name===n));
+  if(currentTab==='chart'){
+    // 합격률차트는 단일선택 유지
+    if(select && allNames.length>0){selectedNames.clear();selectedNames.add(allNames[0]);}
+    else allNames.forEach(n=>selectedNames.delete(n));
+  } else {
+    if(select) allNames.forEach(n=>selectedNames.add(n));
+    else allNames.forEach(n=>selectedNames.delete(n));
   }
-  // UI 업데이트
-  document.querySelectorAll('.name-item').forEach(el=>{
-    const n=el.querySelector('.name-text').textContent;
-    el.classList.toggle('active',selectedNames.has(n));
-  });
+  refreshChipUI();
   updateTypeInfo();
   if(currentTab==='chart') updateViewLabel();
   else updateRoundLabel();
   render();
+}
+
+function toggleName(name){
+  if(currentTab==='chart'){
+    // 합격률차트: 단일 선택
+    selectedNames.clear();
+    // 이미 선택된 거 클릭하면 해제
+    // (단순히 clear 후 add)
+    selectedNames.add(name);
+  } else {
+    if(selectedNames.has(name)) selectedNames.delete(name);
+    else selectedNames.add(name);
+  }
+  refreshChipUI();
+  updateTypeInfo();
+  if(currentTab==='chart') updateViewLabel();
+  else { updateRoundLabel(); updateRoundOptions(); }
+  render();
+}
+
+function refreshChipUI(){
+  document.querySelectorAll('.name-item').forEach(el=>{
+    const n=el.dataset.name;
+    el.classList.toggle('active',selectedNames.has(n));
+  });
 }
 
 function updateViewLabel(){
@@ -442,8 +477,12 @@ function updateRoundLabel(){
   if(selectedNames.size===0){rl.textContent='종목 선택 후 연도·회차를 고르세요';return;}
   const yr=document.getElementById('selYear').value;
   const rd=document.getElementById('selRound').value;
-  if(yr&&rd) rl.innerHTML=`<strong>${yr}년 ${rd}</strong> · ${selectedNames.size}개 종목`;
-  else rl.textContent=`${selectedNames.size}개 종목 선택됨`;
+  if(yr&&rd){
+    const rdLabel=rd==='all'?'연간 전체':rd;
+    rl.innerHTML=`<strong>${yr}년 ${rdLabel}</strong> · ${selectedNames.size}개 종목`;
+  } else {
+    rl.textContent=`${selectedNames.size}개 종목 선택됨`;
+  }
 }
 
 function setType(t){
@@ -454,7 +493,7 @@ function setType(t){
       b.classList.add('active');
   });
   updateTypeInfo();
-  if(selectedNames.size>0 && currentTab==='chart') render();
+  if(selectedNames.size>0&&currentTab==='chart') render();
 }
 
 function updateTypeInfo(){
@@ -482,13 +521,13 @@ function onSlider(){
   const pf=(f/Math.max(maxI,1))*100,pt=(t/Math.max(maxI,1))*100;
   document.getElementById('rangeFill').style.left=pf+'%';
   document.getElementById('rangeFill').style.right=(100-pt)+'%';
-  if(selectedNames.size>0 && currentTab==='chart') render();
+  if(selectedNames.size>0&&currentTab==='chart') render();
 }
 
 function setView(mode){
   viewMode=mode;
   document.querySelectorAll('.vbtn').forEach((b,i)=>b.classList.toggle('active',(i===0&&mode==='year')||(i===1&&mode==='round')));
-  if(selectedNames.size>0 && currentTab==='chart') render();
+  if(selectedNames.size>0&&currentTab==='chart') render();
 }
 
 // 연도 select 구성
@@ -502,17 +541,28 @@ function buildYearSelect(){
   });
 }
 
-function onYearSelect(){
+function updateRoundOptions(){
   const yr=document.getElementById('selYear').value;
   const rdSel=document.getElementById('selRound');
+  const prevVal=rdSel.value;
   rdSel.innerHTML='<option value="">회차 선택</option>';
   if(yr){
     const names=selectedNames.size>0?[...selectedNames]:Object.values(CATS).flat();
     const rounds=[...new Set(RAW.filter(d=>d.year===yr&&names.some(n=>d.name===n)).map(d=>d.round))].sort();
+    // 전체(연간합산) 옵션 추가
+    const allOpt=document.createElement('option');
+    allOpt.value='all';allOpt.textContent=`${yr}년 전체 (연간 합산)`;
+    rdSel.appendChild(allOpt);
     rounds.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rdSel.appendChild(o);});
+    // 이전 선택값 복원
+    if(prevVal) rdSel.value=prevVal;
   }
+}
+
+function onYearSelect(){
+  updateRoundOptions();
   updateRoundLabel();
-  // 연도만 바꿨을 땐 render 안 함 (회차가 아직 선택 안 됨)
+  // 연도만 바꿨을 땐 render 안 함
 }
 
 function onRoundSelect(){
@@ -579,18 +629,22 @@ function renderChart(){
       </div>
     </div>
     <div class="chart-card anim">
-      <div class="chart-title">합격률 추이</div>
-      <div class="chart-desc">필기·실기 합격률 (%)</div>
-      <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
+      <div class="chart-card-header">
+        <div><div class="chart-title">합격률 추이</div><div class="chart-desc">필기·실기 합격률 (%)</div></div>
+        <button class="save-btn" onclick="saveChartImg('chartLineWrap','합격률추이')">📸 저장</button>
+      </div>
+      <div id="chartLineWrap" class="chart-wrap"><canvas id="chartLine"></canvas></div>
       <div class="legend">
         <div class="li"><div class="l-line" style="background:#0091db"></div>필기 합격률</div>
         <div class="li"><div class="l-line" style="background:#e8412e"></div>실기 합격률</div>
       </div>
     </div>
     <div class="chart-card anim">
-      <div class="chart-title">응시자 · 합격자 현황</div>
-      <div class="chart-desc">필기·실기 인원 (명)</div>
-      <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
+      <div class="chart-card-header">
+        <div><div class="chart-title">응시자 · 합격자 현황</div><div class="chart-desc">필기·실기 인원 (명)</div></div>
+        <button class="save-btn" onclick="saveChartImg('chartBarWrap','응시자합격자')">📸 저장</button>
+      </div>
+      <div id="chartBarWrap" class="chart-wrap"><canvas id="chartBar"></canvas></div>
       <div class="legend">
         <div class="li"><div class="l-bar" style="background:#0091db"></div>필기응시</div>
         <div class="li"><div class="l-bar" style="background:#66c2f0"></div>필기합격</div>
@@ -639,6 +693,23 @@ function renderChart(){
   });
 }
 
+// 차트 카드 이미지 저장
+async function saveChartImg(wrapperId, label){
+  const card=document.getElementById(wrapperId).closest('.chart-card');
+  if(!card) return;
+  const btn=card.querySelector('.save-btn');
+  btn.textContent='⏳';btn.disabled=true;
+  try{
+    const canvas=await html2canvas(card,{scale:2,backgroundColor:'#fff',useCORS:true});
+    const a=document.createElement('a');
+    const name=[...selectedNames][0]||'';
+    a.download=`다산에듀_${name}_${label}.png`;
+    a.href=canvas.toDataURL('image/png');
+    a.click();
+  }catch(e){alert('저장 실패: '+e.message);}
+  btn.textContent='📸 저장';btn.disabled=false;
+}
+
 // ── 회차별 합격률 ────────────────────────────────────────────
 function renderRound(){
   if(selectedNames.size===0){showEmpty();return;}
@@ -651,47 +722,43 @@ function renderRound(){
       <div class="empty anim">
         <div class="empty-icon">📅</div>
         <div class="empty-title">연도와 회차를 선택해 주세요</div>
-        <div class="empty-desc">왼쪽에서 연도와 회차를 선택하면<br>선택한 종목들의 합격률 카드가 표시됩니다.</div>
+        <div class="empty-desc">왼쪽에서 연도와 회차를 선택하면\n합격률 카드가 표시됩니다.</div>
       </div>`;
     return;
   }
 
-  const typeLabel=selectedType==='all'?'전체':selectedType;
+  const isAll=rd==='all';
+  const rdLabel=isAll?`${yr}년 전체`:rd;
   const now=new Date();
   const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
-  // 선택 종목 카드 생성
   const cards=[...selectedNames].map(name=>{
-    let data=RAW.filter(d=>d.name===name&&d.year===yr&&d.round===rd);
-    if(data.length===0) return `
+    let data=RAW.filter(d=>d.name===name&&d.year===yr&&(isAll||d.round===rd));
+    if(!data.length) return `
       <div class="round-card">
         <div class="rc-name">${name}</div>
         <div class="rc-no-data">해당 회차 데이터 없음</div>
       </div>`;
-
-    // 유형 합산
     const wa=data.reduce((s,d)=>s+d.written_applicants,0);
     const wp=data.reduce((s,d)=>s+d.written_passed,0);
     const pa=data.reduce((s,d)=>s+d.practical_applicants,0);
     const pp=data.reduce((s,d)=>s+d.practical_passed,0);
-    const wr=wa>0?((wp/wa)*100).toFixed(1):'-';
-    const pr=pa>0?((pp/pa)*100).toFixed(1):'-';
+    const wr=wa>0?((wp/wa)*100).toFixed(1):null;
+    const pr=pa>0?((pp/pa)*100).toFixed(1):null;
     const types=[...new Set(data.map(d=>d.type))].join('/');
-    const typeBg=types.includes('CBT')?'#fff0ee':'#edf2fb';
-    const typeColor=types.includes('CBT')?'var(--cbt)':'var(--pbt)';
-
+    const isCBT=types.includes('CBT');
     return `
       <div class="round-card">
         <div class="rc-name">${name}</div>
-        <span class="rc-type" style="background:${typeBg};color:${typeColor}">${types}</span>
+        <span class="rc-type" style="background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'var(--cbt)':'var(--pbt)'}">${types}</span>
         <div class="rc-row"><span class="rc-label">필기 응시</span><span class="rc-val">${wa?wa.toLocaleString():'-'}명</span></div>
         <div class="rc-row"><span class="rc-label">필기 합격</span><span class="rc-val">${wp?wp.toLocaleString():'-'}명</span></div>
-        <div class="rc-rate">${wr !== '-' ? wr+'%' : '-'} <span style="font-size:10px;font-weight:400;color:var(--text-muted)">필기합격률</span></div>
-        ${pa ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light)">
+        <div class="rc-rate">${wr?wr+'%':'-'} <span class="rc-rate-label">필기합격률</span></div>
+        ${pa?`<div class="rc-prac">
           <div class="rc-row"><span class="rc-label">실기 응시</span><span class="rc-val">${pa.toLocaleString()}명</span></div>
           <div class="rc-row"><span class="rc-label">실기 합격</span><span class="rc-val">${pp.toLocaleString()}명</span></div>
-          <div class="rc-rate" style="color:var(--green)">${pr}% <span style="font-size:10px;font-weight:400;color:var(--text-muted)">실기합격률</span></div>
-        </div>` : ''}
+          <div class="rc-rate" style="color:var(--green)">${pr?pr+'%':'-'} <span class="rc-rate-label">실기합격률</span></div>
+        </div>`:''}
       </div>`;
   }).join('');
 
@@ -699,20 +766,18 @@ function renderRound(){
     <div class="capture-wrap anim" id="captureArea">
       <div class="capture-header">
         <div>
-          <div class="capture-title">${yr}년 ${rd} 합격률 현황</div>
+          <div class="capture-title">${yr}년 ${rdLabel} 합격률 현황</div>
           <div class="capture-subtitle">국가기술자격 필기시험 채점 결과 · 발표일 ${dateStr}</div>
         </div>
-        <div class="capture-brand">
-          <div>
-            <div class="capture-brand-name">다산에듀 교육연구소</div>
-            <div class="capture-brand-sub">출처 · 한국산업인력공단</div>
-          </div>
+        <div>
+          <div class="capture-brand-name">다산에듀 교육연구소</div>
+          <div class="capture-brand-sub">출처 · 한국산업인력공단</div>
         </div>
       </div>
-      <div class="round-cards">${cards}</div>
+      <div class="round-cards" id="roundCards">${cards}</div>
       <div class="capture-footer">
         <div class="capture-footer-txt">※ 데이터 출처: 한국산업인력공단 · 다산에듀 교육연구소 제공</div>
-        <button class="capture-btn" onclick="captureCard()">📸 이미지로 저장</button>
+        <button class="capture-btn" id="captureBtn" onclick="captureCard()">📸 이미지로 저장</button>
       </div>
     </div>`;
 }
@@ -720,20 +785,24 @@ function renderRound(){
 async function captureCard(){
   const el=document.getElementById('captureArea');
   if(!el) return;
-  const btn=el.querySelector('.capture-btn');
-  btn.textContent='⏳ 저장 중...';
-  btn.disabled=true;
+  const btn=document.getElementById('captureBtn');
+  btn.textContent='⏳ 저장 중...';btn.disabled=true;
+  // footer(저장버튼)는 숨기고 캡처
+  const footer=el.querySelector('.capture-footer');
+  footer.style.display='none';
   try{
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff',useCORS:true});
+    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff',useCORS:true,
+      width:el.scrollWidth,height:el.scrollHeight});
     const a=document.createElement('a');
     const yr=document.getElementById('selYear').value;
     const rd=document.getElementById('selRound').value;
-    a.download=`다산에듀_합격률_${yr}년_${rd}.png`;
+    const rdLabel=rd==='all'?'연간전체':rd;
+    a.download=`다산에듀_합격률_${yr}년_${rdLabel}.png`;
     a.href=canvas.toDataURL('image/png');
     a.click();
   }catch(e){alert('저장 실패: '+e.message);}
-  btn.textContent='📸 이미지로 저장';
-  btn.disabled=false;
+  footer.style.display='flex';
+  btn.textContent='📸 이미지로 저장';btn.disabled=false;
 }
 
 function aggByYear(data){
