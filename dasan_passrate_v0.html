@@ -323,11 +323,12 @@ let selectedType='all',viewMode='year',currentTab='chart';
 let fromIdx=0,toIdx=0;
 let chartLine=null,chartBar=null;
 
-// 빈셀/'-' → null(미시행), '0' or 숫자 → 숫자값
+// 빈셀/'-'/'#DIV/0!' → null(미시행), 숫자 → 숫자(0 포함)
 function pN(v){
   const s=String(v??'').replace(/[, ]/g,'').trim();
-  if(!s||s==='-') return null;
-  return parseFloat(s)||0;
+  if(!s||s==='-'||s.startsWith('#')) return null;
+  const n=parseFloat(s);
+  return isNaN(n)?null:n;
 }
 function pY(v){return String(v||'').replace('년','').trim();}
 function fmt(n){if(!n)return'0';if(n>=10000)return(n/10000).toFixed(1)+'만';if(n>=1000)return(n/1000).toFixed(1)+'천';return n.toLocaleString();}
@@ -345,7 +346,7 @@ async function fetchSheet(s){
     const wa=pN(c[COL.wa]),wp=pN(c[COL.wp]);
     const pa=pN(c[COL.pa]),pp=pN(c[COL.pp]);
     const note=(c[COL.note]||'').trim();
-    // wa/pa가 null이면 미시행(차트에서 null처리), 0이면 0%
+    // wa/pa가 null이면 미시행(차트 끊김), 0이면 0% 표시
     const writtenRate=wa===null?null:(wa>0?+((wp/wa)*100).toFixed(1):0);
     const practicalRate=pa===null?null:(pa>0?+((pp/pa)*100).toFixed(1):0);
     result.push({
