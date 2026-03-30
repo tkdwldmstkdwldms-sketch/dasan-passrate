@@ -551,18 +551,14 @@ function buildYearSelect(){
 function updateRoundOptions(){
   const yr=document.getElementById('selYear').value;
   const rdSel=document.getElementById('selRound');
-  const prevVal=rdSel.value;
   rdSel.innerHTML='<option value="">회차 선택</option>';
   if(yr){
     const names=selectedNames.size>0?[...selectedNames]:Object.values(CATS).flat();
     const rounds=[...new Set(RAW.filter(d=>d.year===yr&&names.some(n=>d.name===n)).map(d=>d.round))].sort();
-    // 전체(연간합산) 옵션 추가
     const allOpt=document.createElement('option');
     allOpt.value='all';allOpt.textContent=`${yr}년 전체 (연간 합산)`;
     rdSel.appendChild(allOpt);
     rounds.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rdSel.appendChild(o);});
-    // 이전 선택값 복원
-    if(prevVal) rdSel.value=prevVal;
   }
 }
 
