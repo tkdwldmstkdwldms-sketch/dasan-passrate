@@ -6,7 +6,7 @@
 <title>국가기술자격 합격률 현황 | 다산에듀 교육연구소</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --white:#fff;--bg:#f5f6f8;--bg2:#eef0f4;
@@ -27,8 +27,8 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .topnav-inner{padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .brand-badge{width:28px;height:28px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
-.brand-name{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:-.3px}
-.brand-sub{font-size:9px;color:rgba(255,255,255,.75);letter-spacing:.2px}
+.brand-name{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:900;color:#fff;letter-spacing:-.2px}
+.brand-sub{font-size:9px;color:rgba(255,255,255,.75);letter-spacing:.3px;font-weight:400}
 .nav-center{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
 .nav-badge{font-size:10px;color:rgba(255,255,255,.9);background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:2px 8px;border-radius:10px}
 .nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
@@ -266,7 +266,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
         <div class="sidebar-divider"></div>
         <div class="sidebar-label">연도 · 회차 선택</div>
         <div class="round-selects">
-          <select class="round-select" id="selYear" onchange="onRoundSelect()">
+          <select class="round-select" id="selYear" onchange="onYearSelect()">
             <option value="">연도 선택</option>
           </select>
           <select class="round-select" id="selRound" onchange="onRoundSelect()">
@@ -502,18 +502,20 @@ function buildYearSelect(){
   });
 }
 
-function onRoundSelect(){
+function onYearSelect(){
   const yr=document.getElementById('selYear').value;
   const rdSel=document.getElementById('selRound');
+  rdSel.innerHTML='<option value="">회차 선택</option>';
   if(yr){
-    // 해당 연도의 회차 목록 (선택된 종목 기준, 없으면 전체)
     const names=selectedNames.size>0?[...selectedNames]:Object.values(CATS).flat();
     const rounds=[...new Set(RAW.filter(d=>d.year===yr&&names.some(n=>d.name===n)).map(d=>d.round))].sort();
-    rdSel.innerHTML='<option value="">회차 선택</option>';
     rounds.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rdSel.appendChild(o);});
-  } else {
-    rdSel.innerHTML='<option value="">회차 선택</option>';
   }
+  updateRoundLabel();
+  // 연도만 바꿨을 땐 render 안 함 (회차가 아직 선택 안 됨)
+}
+
+function onRoundSelect(){
   updateRoundLabel();
   if(selectedNames.size>0) render();
 }
