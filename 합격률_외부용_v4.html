@@ -15,45 +15,47 @@
   --accent:#e8412e;--green:#1a9e5e;
   --pbt:#2952a3;--cbt:#e8412e;--all:#6b4fd4;
   --shadow-sm:0 1px 4px rgba(0,0,0,.06);
-  --r:14px;
+  --r:12px;
+  --sidebar:260px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;height:100vh;display:flex;flex-direction:column}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 
 /* NAV */
-.topnav{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-mid) 60%,var(--brand-light) 100%);position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(26,58,107,.3);flex-shrink:0}
-.topnav-inner{max-width:100%;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topnav{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-mid) 60%,var(--brand-light) 100%);flex-shrink:0;box-shadow:0 2px 12px rgba(26,58,107,.3)}
+.topnav-inner{padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.brand-badge{width:30px;height:30px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.brand-badge{width:28px;height:28px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
 .brand-name{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:#fff}
-.brand-sub{font-size:10px;color:rgba(255,255,255,.7)}
-.nav-center{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;flex-wrap:wrap}
-.nav-badge{font-size:11px;color:rgba(255,255,255,.85);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:2px 8px;border-radius:10px}
-.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.nav-src{font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.25)}
-#copyBtn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
+.brand-sub{font-size:9px;color:rgba(255,255,255,.7)}
+.nav-center{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
+.nav-badge{font-size:10px;color:rgba(255,255,255,.85);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:2px 8px;border-radius:10px}
+.nav-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.nav-src{font-size:10px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);padding:3px 8px;border-radius:16px;border:1px solid rgba(255,255,255,.25)}
+#copyBtn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:10px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s}
 #copyBtn:hover{background:rgba(255,255,255,.3)}
 #copyBtn.copied{background:var(--green);border-color:var(--green)}
 
-/* MAIN LAYOUT: 좌우 2단 */
-.main-wrap{display:flex;flex:1;overflow:hidden;max-width:100%;gap:0}
+/* TAB BAR */
+.tab-bar{background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;padding:0 16px}
+.tab-btn{padding:10px 18px;font-size:12px;font-weight:600;font-family:'Noto Sans KR',sans-serif;border:none;background:transparent;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn.active{color:var(--brand);border-bottom-color:var(--brand)}
 
-/* 좌측 사이드바 */
-.sidebar{width:280px;min-width:260px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
-.sidebar-section{padding:16px 16px 0}
-.sidebar-label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px}
-.sidebar-divider{height:1px;background:var(--border-light);margin:14px 0}
+/* MAIN LAYOUT */
+.main-wrap{display:flex;flex:1;overflow:hidden}
 
-/* 종목 칩 */
-.cat-label{font-size:10px;font-weight:600;color:var(--text-muted);letter-spacing:.3px;text-transform:uppercase;margin:6px 0 4px}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid var(--border);background:var(--white);color:var(--text-sub);cursor:pointer;transition:all .15s;font-family:'Noto Sans KR',sans-serif;white-space:nowrap}
+/* 사이드바 - 데스크탑 고정 */
+.sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;flex-shrink:0}
+.sidebar-section{padding:14px 14px 0}
+.sidebar-label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px}
+.sidebar-divider{height:1px;background:var(--border-light);margin:12px 0}
+.cat-label{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin:5px 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{padding:4px 11px;border-radius:16px;font-size:11px;font-weight:500;border:1.5px solid var(--border);background:var(--white);color:var(--text-sub);cursor:pointer;transition:all .15s;font-family:'Noto Sans KR',sans-serif;white-space:nowrap}
 .chip:hover{border-color:var(--brand-light);color:var(--brand-mid);background:var(--brand-pale)}
-.chip.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 2px 6px rgba(26,58,107,.25)}
-
-/* PBT/CBT 탭 */
-.type-tabs{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:3px}
-.ttab{flex:1;padding:5px 0;font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:600;border:none;background:transparent;border-radius:7px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;color:var(--text-muted)}
+.chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.type-tabs{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:3px}
+.ttab{flex:1;padding:5px 0;font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:600;border:none;background:transparent;border-radius:7px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--text-muted)}
 .ttab.active.all{background:#fff;color:var(--all);box-shadow:var(--shadow-sm)}
 .ttab.active.pbt{background:#fff;color:var(--pbt);box-shadow:var(--shadow-sm)}
 .ttab.active.cbt{background:#fff;color:var(--cbt);box-shadow:var(--shadow-sm)}
@@ -61,87 +63,96 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .ttab.active.all .ttab-dot{background:var(--all)}
 .ttab.active.pbt .ttab-dot{background:var(--pbt)}
 .ttab.active.cbt .ttab-dot{background:var(--cbt)}
-.type-info{font-size:10px;color:var(--text-muted);margin-top:5px;line-height:1.5}
-
-/* 슬라이더 */
+.type-info{font-size:9px;color:var(--text-muted);margin-top:4px;line-height:1.5}
 .slider-wrap{position:relative;padding:0 2px}
 .range-track{position:relative;height:6px;background:var(--bg2);border-radius:3px;border:1px solid var(--border)}
 .range-fill{position:absolute;top:0;height:100%;border-radius:3px;pointer-events:none;background:var(--brand);opacity:.25}
 .range-input{position:absolute;top:50%;transform:translateY(-50%);width:100%;appearance:none;-webkit-appearance:none;background:transparent;outline:none;pointer-events:none}
 .range-input::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:var(--brand);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;pointer-events:all}
-.year-display{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--brand);margin-bottom:8px}
-.year-ticks{display:flex;justify-content:space-between;margin-top:5px}
+.year-display{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--brand);margin-bottom:7px}
+.year-ticks{display:flex;justify-content:space-between;margin-top:4px}
 .year-tick{font-size:9px;color:var(--text-muted)}
-
-/* 연도별/회차별 토글 */
 .vtoggle{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:3px}
 .vbtn{flex:1;padding:5px 0;font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:500;border:none;background:transparent;color:var(--text-muted);border-radius:6px;cursor:pointer;transition:all .15s}
 .vbtn.active{background:#fff;color:var(--brand);font-weight:700;box-shadow:var(--shadow-sm)}
-
-.sidebar-bottom{padding:12px 16px;margin-top:auto;border-top:1px solid var(--border-light)}
-.view-label{font-size:11px;color:var(--text-muted);margin-bottom:6px}
+.sidebar-bottom{padding:12px 14px;border-top:1px solid var(--border-light)}
+.view-label{font-size:11px;color:var(--text-muted);margin-bottom:6px;min-height:18px}
 .view-label strong{color:var(--brand)}
 
-/* 우측 콘텐츠 영역 */
-.content-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+/* 콘텐츠 영역 */
+.content-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
 
 /* STAT CARDS */
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
 .sc-blue::before{background:linear-gradient(90deg,var(--brand),var(--brand-light))}
 .sc-red::before{background:linear-gradient(90deg,var(--accent),#f4967e)}
 .sc-green::before{background:linear-gradient(90deg,var(--green),#52d19a)}
-.stat-label{font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:3px}
-.stat-value{font-size:22px;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:3px}
+.stat-label{font-size:10px;color:var(--text-muted);font-weight:500;margin-bottom:2px}
+.stat-value{font-size:20px;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:2px}
 .sc-blue .stat-value{color:var(--brand)}
 .sc-red .stat-value{color:var(--accent)}
 .sc-green .stat-value{color:var(--green)}
 .stat-sub{font-size:10px;color:var(--text-muted)}
-.type-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:5px}
+.type-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px;margin-bottom:4px}
 .tb-all{background:#f0edff;color:var(--all)}
 .tb-pbt{background:#edf2fb;color:var(--pbt)}
 .tb-cbt{background:#fff0ee;color:var(--cbt)}
 
 /* CHARTS */
-.charts-grid{display:grid;grid-template-columns:1fr;gap:14px}
-.chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow-sm)}
 .chart-title{font-size:13px;font-weight:700;color:var(--text)}
-.chart-desc{font-size:11px;color:var(--text-muted);margin-top:2px}
-.chart-wrap{position:relative;height:240px;margin-top:12px}
-.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
-.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted)}
-.l-bar{width:12px;height:10px;border-radius:2px}
-.l-line{width:18px;height:3px;border-radius:2px}
+.chart-desc{font-size:10px;color:var(--text-muted);margin-top:1px}
+.chart-wrap{position:relative;height:220px;margin-top:10px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted)}
+.l-bar{width:10px;height:8px;border-radius:2px}
+.l-line{width:16px;height:3px;border-radius:2px}
+
+/* DATA TABLE */
+.table-wrap{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:auto;box-shadow:var(--shadow-sm)}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+.data-table th{background:var(--brand);color:#fff;padding:9px 12px;text-align:center;font-weight:600;white-space:nowrap;position:sticky;top:0;z-index:1}
+.data-table td{padding:7px 12px;text-align:center;border-bottom:1px solid var(--border-light);white-space:nowrap}
+.data-table tr:hover td{background:var(--brand-pale)}
+.data-table td:first-child,.data-table td:nth-child(2){text-align:left}
+.data-table .td-num{text-align:right;font-variant-numeric:tabular-nums}
+.data-table .td-rate{font-weight:700}
+.data-table .td-rate.written{color:var(--pbt)}
+.data-table .td-rate.practical{color:var(--green)}
+.cat-header td{background:var(--bg2);font-weight:700;color:var(--text-sub);font-size:11px}
 
 /* EMPTY */
-.empty{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:60px 24px;text-align:center;box-shadow:var(--shadow-sm);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.empty-icon{font-size:44px;margin-bottom:12px;opacity:.4}
-.empty-title{font-size:15px;font-weight:700;color:var(--text-sub);margin-bottom:6px}
+.empty{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:48px 24px;text-align:center;box-shadow:var(--shadow-sm);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.empty-icon{font-size:40px;margin-bottom:10px;opacity:.4}
+.empty-title{font-size:14px;font-weight:700;color:var(--text-sub);margin-bottom:5px}
 .empty-desc{font-size:12px;color:var(--text-muted);line-height:1.6}
 
 /* FOOTER */
-.footer{border-top:1px solid var(--border);background:#fff;padding:12px 20px;flex-shrink:0}
+.footer{border-top:1px solid var(--border);background:#fff;padding:10px 16px;flex-shrink:0}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
-.footer-brand{font-family:'Noto Serif KR',serif;font-size:12px;font-weight:700;color:var(--brand)}
+.footer-brand{font-family:'Noto Serif KR',serif;font-size:11px;font-weight:700;color:var(--brand)}
 .footer-copy{font-size:10px;color:var(--text-muted)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .anim{animation:fadeUp .3s ease both}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* 모바일: 사이드바 상단 고정 해제, 스크롤 허용 */
 @media(max-width:768px){
-  .main-wrap{flex-direction:column}
-  .sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border);max-height:50vh}
+  body{height:auto;overflow:auto}
+  .main-wrap{flex-direction:column;overflow:visible}
+  .sidebar{width:100%;min-width:unset;border-right:none;border-bottom:1px solid var(--border);overflow:visible;height:auto}
+  .content-area{overflow:visible;height:auto}
   .stat-grid{grid-template-columns:repeat(2,1fr)}
-  .charts-grid{grid-template-columns:1fr}
   .nav-center{display:none}
+  .sidebar-bottom{margin-top:0}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="topnav">
   <div class="topnav-inner">
     <div class="brand">
@@ -152,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
       </div>
     </div>
     <div class="nav-center">
-      <span style="font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:#fff">국가기술자격 합격률 현황</span>
+      <span style="font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:#fff">국가기술자격 합격률 현황</span>
       <span class="nav-badge">PBT · CBT</span>
       <span class="nav-badge" id="navDateBadge">📊 최신 데이터</span>
     </div>
@@ -163,23 +174,20 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
   </div>
 </nav>
 
-<!-- MAIN: 좌우 2단 -->
-<div class="main-wrap">
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('chart')">📊 합격률 차트</button>
+  <button class="tab-btn" onclick="switchTab('table')">📋 원본 데이터</button>
+</div>
 
-  <!-- 좌측 사이드바 -->
+<div class="main-wrap">
   <div class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">종목 선택</div>
-      <div id="chipArea">
-        <div style="color:var(--text-muted);font-size:12px;padding:8px 0">데이터 로딩 중...</div>
-      </div>
+      <div id="chipArea"><div style="color:var(--text-muted);font-size:11px;padding:6px 0">로딩 중...</div></div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-divider"></div>
-      <div class="sidebar-label" style="display:flex;align-items:center;justify-content:space-between">
-        시험 유형
-      </div>
+      <div class="sidebar-label">시험 유형</div>
       <div class="type-tabs">
         <button class="ttab all active" onclick="setType('all')"><span class="ttab-dot"></span>전체</button>
         <button class="ttab pbt" onclick="setType('PBT')"><span class="ttab-dot"></span>PBT</button>
@@ -187,7 +195,6 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
       </div>
       <div class="type-info" id="typeInfo"></div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-divider"></div>
       <div class="sidebar-label">기간 설정</div>
@@ -205,35 +212,29 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
       </div>
       <div class="year-ticks">
         <span class="year-tick">2001</span>
-        <span class="year-tick">2006</span>
-        <span class="year-tick">2011</span>
-        <span class="year-tick">2016</span>
-        <span class="year-tick">2021</span>
+        <span class="year-tick">2008</span>
+        <span class="year-tick">2015</span>
         <span class="year-tick">2026</span>
       </div>
     </div>
-
     <div class="sidebar-bottom">
       <div class="view-label" id="viewLabel">종목을 선택하세요</div>
-      <div class="vtoggle">
+      <div class="vtoggle" id="viewToggle">
         <button class="vbtn active" onclick="setView('year')">연도별</button>
         <button class="vbtn" onclick="setView('round')">회차별</button>
       </div>
     </div>
   </div>
 
-  <!-- 우측 콘텐츠 -->
   <div class="content-area" id="contentArea">
     <div class="empty anim">
-      <div class="empty-icon" id="loadIcon" style="animation:spin 1s linear infinite">⏳</div>
-      <div class="empty-title" id="loadTitle">데이터 불러오는 중...</div>
-      <div class="empty-desc" id="loadDesc">구글 시트에서 최신 데이터를 가져오고 있어요</div>
+      <div class="empty-icon" style="animation:spin 1s linear infinite">⏳</div>
+      <div class="empty-title">데이터 불러오는 중...</div>
+      <div class="empty-desc">구글 시트에서 최신 데이터를 가져오고 있어요</div>
     </div>
   </div>
-
 </div>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">다산에듀 교육연구소</div>
@@ -242,55 +243,56 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 </footer>
 
 <script>
-// ── 구글 시트 API ────────────────────────────────────────────
 const SHEET_ID = '1qCU0FtcjAd6aiWuF_6Dkpr3qzGyr73SthFDiQDW44_8';
 const API_KEY  = 'AIzaSyB4_Sd9-nCuZd1cd4BIoGuRhwIIcOq-8UA';
+// 3개 시트 모두 동일 컬럼: A종목 B연도 C회차 D필기유형 E필기시험일(빈) F필기응시 G필기합격 H합격률 I실기응시 J실기합격 K실기합격률
 const SHEET_DEFS = [
-  {name:'(산업)기사', category:'(산업)기사', wa:5, wp:6, pa:8, pp:9},
-  {name:'기능사',      category:'기능사',     wa:5, wp:6, pa:8, pp:9},
-  {name:'기능장',      category:'기능장',     wa:5, wp:6, pa:8, pp:9},
+  {name:'(산업)기사', category:'(산업)기사'},
+  {name:'기능사',      category:'기능사'},
+  {name:'기능장',      category:'기능장'},
 ];
-
-let RAW = [];
-let YEARS = [];
+const COL = {wa:5, wp:6, pa:8, pp:9}; // 0-based index
 
 const CATS = {
-  '(산업)기사': ['전기기사','전기산업기사','전기공사기사','전기공사산업기사',
-                 '소방설비기사(전기)','소방설비기사(기계)','소방설비산업기사(전기)','소방설비산업기사(기계)'],
-  '기능사': ['전기기능사'],
-  '기능장': ['전기기능장'],
+  '(산업)기사':['전기기사','전기산업기사','전기공사기사','전기공사산업기사','소방설비기사(전기)','소방설비기사(기계)','소방설비산업기사(전기)','소방설비산업기사(기계)'],
+  '기능사':['전기기능사'],
+  '기능장':['전기기능장'],
 };
 
-let selectedName=null, selectedType='all', viewMode='year';
+let RAW=[], YEARS=[];
+let selectedName=null, selectedType='all', viewMode='year', currentTab='chart';
 let fromIdx=0, toIdx=0;
-let chartBar=null, chartLine=null;
+let chartLine=null, chartBar=null;
 
-function pN(v){ return parseFloat(String(v||'').replace(/[,%]/g,''))||0; }
+function pN(v){
+  const s=String(v||'').replace(/[, ]/g,'').trim();
+  if(!s||s==='-'||s==='') return 0;
+  return parseFloat(s)||0;
+}
 function pY(v){ return String(v||'').replace('년','').trim(); }
 function fmt(n){ if(!n)return'0'; if(n>=10000)return(n/10000).toFixed(1)+'만'; if(n>=1000)return(n/1000).toFixed(1)+'천'; return n.toLocaleString(); }
 
 async function fetchSheet(s){
-  const range = "'" + s.name + "'";
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`;
-  const res = await fetch(url);
+  const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/'${s.name}'?key=${API_KEY}`;
+  const res=await fetch(url);
   if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||res.status); }
-  const json = await res.json();
-  const rows = json.values||[];
+  const json=await res.json();
+  const rows=json.values||[];
   const result=[];
   for(let i=1;i<rows.length;i++){
     const c=rows[i];
     if(!c[0]||c[0]==='-') continue;
-    // (산업)기사: c[5]=필기응시 c[6]=필기합격 c[8]=실기응시 c[9]=실기합격
-    // 기능사/기능장: c[4]=필기응시 c[5]=필기합격 c[7]=실기응시 c[8]=실기합격
-    const wa=pN(c[s.wa]), wp=pN(c[s.wp]);
-    const pa=pN(c[s.pa]), pp=pN(c[s.pp]);
-    if(!wa && !pa) continue;
+    const wa=pN(c[COL.wa]), wp=pN(c[COL.wp]);
+    const pa=pN(c[COL.pa]), pp=pN(c[COL.pp]);
     result.push({
-      category:s.category, name:c[0].trim(),
-      year:pY(c[1]), round:(c[2]||'').trim(), type:(c[3]||'PBT').trim(),
-      written_applicants:wa|0, written_passed:wp|0,
+      category:s.category,
+      name:c[0].trim(),
+      year:pY(c[1]),
+      round:(c[2]||'').trim(),
+      type:(c[3]||'PBT').trim(),
+      written_applicants:wa, written_passed:wp,
       written_rate:wa>0?+((wp/wa)*100).toFixed(1):0,
-      practical_applicants:pa|0, practical_passed:pp|0,
+      practical_applicants:pa, practical_passed:pp,
       practical_rate:pa>0?+((pp/pa)*100).toFixed(1):0,
     });
   }
@@ -299,40 +301,45 @@ async function fetchSheet(s){
 
 async function loadData(){
   try{
-    const results = await Promise.all(SHEET_DEFS.map(s=>fetchSheet(s)));
-    RAW = results.flat().filter(d=>d.name);
-
-    // YEARS 동적 생성
-    YEARS = [...new Set(RAW.map(d=>d.year))].sort();
-    toIdx = YEARS.length-1;
-    const maxIdx = YEARS.length-1;
-    ['sliderFrom','sliderTo'].forEach(id=>{
-      const el=document.getElementById(id);
-      el.max=maxIdx;
-      if(id==='sliderTo') el.value=maxIdx;
-    });
-
-    // 날짜 배지 업데이트
-    document.getElementById('navDateBadge').textContent = `📊 ${YEARS[YEARS.length-1]}년 포함`;
-
+    const results=await Promise.all(SHEET_DEFS.map(s=>fetchSheet(s)));
+    RAW=results.flat().filter(d=>d.name);
+    YEARS=[...new Set(RAW.map(d=>d.year))].sort();
+    toIdx=YEARS.length-1;
+    const maxIdx=YEARS.length-1;
+    document.getElementById('sliderFrom').max=maxIdx;
+    document.getElementById('sliderTo').max=maxIdx;
+    document.getElementById('sliderTo').value=maxIdx;
+    document.getElementById('navDateBadge').textContent=`📊 ${YEARS[maxIdx]}년 포함`;
     buildChips();
     onSlider();
-
-    document.getElementById('contentArea').innerHTML=`
-      <div class="empty anim">
-        <div class="empty-icon">🔍</div>
-        <div class="empty-title">종목을 선택해 주세요</div>
-        <div class="empty-desc">왼쪽에서 확인하고 싶은 자격종목을 선택하면<br>합격률 현황 차트가 표시됩니다.</div>
-      </div>`;
+    showEmpty();
   }catch(e){
     console.error(e);
     document.getElementById('contentArea').innerHTML=`
       <div class="empty anim">
         <div class="empty-icon">⚠️</div>
         <div class="empty-title">데이터 로드 실패</div>
-        <div class="empty-desc">Google Sheets API가 활성화되어 있는지 확인해주세요.<br><small style="color:#bbb;margin-top:6px;display:block">${e.message}</small></div>
+        <div class="empty-desc">Google Sheets API가 활성화되어 있는지 확인해주세요.<br><small style="color:#bbb;margin-top:4px;display:block">${e.message}</small></div>
       </div>`;
   }
+}
+
+function showEmpty(){
+  document.getElementById('contentArea').innerHTML=`
+    <div class="empty anim">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">종목을 선택해 주세요</div>
+      <div class="empty-desc">왼쪽에서 확인하고 싶은 자격종목을 선택하면<br>데이터가 표시됩니다.</div>
+    </div>`;
+}
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='chart')||(i===1&&tab==='table')));
+  // 원본 데이터 탭에서는 연도별/회차별 토글 숨김
+  document.getElementById('viewToggle').style.display=tab==='table'?'none':'flex';
+  if(selectedName) render();
+  else showEmpty();
 }
 
 function buildChips(){
@@ -340,7 +347,7 @@ function buildChips(){
   area.innerHTML=Object.entries(CATS).map(([cat,names])=>{
     const exist=names.filter(n=>RAW.some(d=>d.name===n));
     if(!exist.length) return '';
-    return `<div style="margin-bottom:8px">
+    return `<div style="margin-bottom:7px">
       <div class="cat-label">${cat}</div>
       <div class="chips">${exist.map(n=>`<button class="chip" data-name="${n}" onclick="selectName('${n}')">${n}</button>`).join('')}</div>
     </div>`;
@@ -398,6 +405,14 @@ function setView(mode){
   if(selectedName) render();
 }
 
+function getFilteredData(){
+  const maxI=YEARS.length-1;
+  const fromY=YEARS[Math.min(fromIdx,maxI)], toY=YEARS[Math.min(toIdx,maxI)];
+  let data=RAW.filter(d=>d.name===selectedName&&d.year>=fromY&&d.year<=toY);
+  if(selectedType!=='all') data=data.filter(d=>d.type===selectedType);
+  return data;
+}
+
 function aggregateByYear(data){
   const map={};
   data.forEach(d=>{
@@ -407,18 +422,19 @@ function aggregateByYear(data){
   });
   return Object.values(map).sort((a,b)=>a.year.localeCompare(b.year)).map(d=>({
     ...d,
-    written_rate:d.wa>0?+(d.wp/d.wa*100).toFixed(1):0,
-    practical_rate:d.pa>0?+(d.pp/d.pa*100).toFixed(1):0,
+    written_rate:d.wa>0?+((d.wp/d.wa)*100).toFixed(1):0,
+    practical_rate:d.pa>0?+((d.pp/d.pa)*100).toFixed(1):0,
     label:d.year
   }));
 }
 
 function render(){
-  const maxI=YEARS.length-1;
-  const fromY=YEARS[Math.min(fromIdx,maxI)], toY=YEARS[Math.min(toIdx,maxI)];
-  let data=RAW.filter(d=>d.name===selectedName&&d.year>=fromY&&d.year<=toY);
-  if(selectedType!=='all') data=data.filter(d=>d.type===selectedType);
+  if(currentTab==='chart') renderChart();
+  else renderTable();
+}
 
+function renderChart(){
+  const data=getFilteredData();
   const typeLabel=selectedType==='all'?'전체':selectedType;
   const badgeCls=selectedType==='PBT'?'tb-pbt':selectedType==='CBT'?'tb-cbt':'tb-all';
   const vl=document.getElementById('viewLabel');
@@ -432,13 +448,12 @@ function render(){
   const pts=viewMode==='year'
     ?aggregateByYear(data)
     :data.map(d=>({...d,wa:d.written_applicants,wp:d.written_passed,pa:d.practical_applicants,pp:d.practical_passed,
-      label:`'${d.year.slice(2)}-${d.round}`}));
-
+        label:`'${d.year.slice(2)}-${d.round}`}));
   const labels=pts.map(d=>viewMode==='year'?d.year:d.label);
   const tWA=pts.reduce((s,d)=>s+d.wa,0), tWP=pts.reduce((s,d)=>s+d.wp,0);
   const tPA=pts.reduce((s,d)=>s+d.pa,0), tPP=pts.reduce((s,d)=>s+d.pp,0);
-  const aWR=tWA>0?(tWP/tWA*100).toFixed(1):0;
-  const aPR=tPA>0?(tPP/tPA*100).toFixed(1):0;
+  const aWR=tWA>0?((tWP/tWA)*100).toFixed(1):0;
+  const aPR=tPA>0?((tPP/tPA)*100).toFixed(1):0;
 
   document.getElementById('contentArea').innerHTML=`
     <div class="stat-grid anim">
@@ -467,26 +482,24 @@ function render(){
         <div class="stat-sub">전체 기간 평균</div>
       </div>
     </div>
-    <div class="charts-grid anim">
-      <div class="chart-card">
-        <div class="chart-title">합격률 추이</div>
-        <div class="chart-desc">필기·실기 합격률 (%)</div>
-        <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
-        <div class="legend">
-          <div class="li"><div class="l-line" style="background:#2952a3"></div>필기</div>
-          <div class="li"><div class="l-line" style="background:#e8412e"></div>실기</div>
-        </div>
+    <div class="chart-card anim">
+      <div class="chart-title">합격률 추이</div>
+      <div class="chart-desc">필기·실기 합격률 (%)</div>
+      <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
+      <div class="legend">
+        <div class="li"><div class="l-line" style="background:#2952a3"></div>필기 합격률</div>
+        <div class="li"><div class="l-line" style="background:#e8412e"></div>실기 합격률</div>
       </div>
-      <div class="chart-card">
-        <div class="chart-title">응시자 · 합격자</div>
-        <div class="chart-desc">필기·실기 인원 (명)</div>
-        <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
-        <div class="legend">
-          <div class="li"><div class="l-bar" style="background:#2952a3"></div>필기응시</div>
-          <div class="li"><div class="l-bar" style="background:#7aa8e8"></div>필기합격</div>
-          <div class="li"><div class="l-bar" style="background:#e8412e"></div>실기응시</div>
-          <div class="li"><div class="l-bar" style="background:#f4967e"></div>실기합격</div>
-        </div>
+    </div>
+    <div class="chart-card anim">
+      <div class="chart-title">응시자 · 합격자 현황</div>
+      <div class="chart-desc">필기·실기 인원 (명)</div>
+      <div class="chart-wrap"><canvas id="chartBar"></canvas></div>
+      <div class="legend">
+        <div class="li"><div class="l-bar" style="background:#2952a3"></div>필기응시</div>
+        <div class="li"><div class="l-bar" style="background:#7aa8e8"></div>필기합격</div>
+        <div class="li"><div class="l-bar" style="background:#e8412e"></div>실기응시</div>
+        <div class="li"><div class="l-bar" style="background:#f4967e"></div>실기합격</div>
       </div>
     </div>`;
 
@@ -522,18 +535,55 @@ function render(){
   });
 }
 
+function renderTable(){
+  const data=getFilteredData();
+  const vl=document.getElementById('viewLabel');
+  vl.innerHTML=`<strong>${selectedName}</strong> 원본 데이터`;
+
+  if(!data.length){
+    document.getElementById('contentArea').innerHTML=`<div class="empty anim"><div class="empty-icon">📭</div><div class="empty-title">해당 조건에 데이터가 없습니다</div><div class="empty-desc">기간 또는 시험 유형을 조정해 주세요.</div></div>`;
+    return;
+  }
+
+  const rows=data.map(d=>`
+    <tr>
+      <td>${d.name}</td>
+      <td>${d.year}</td>
+      <td>${d.round}</td>
+      <td><span style="font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700;background:${d.type==='CBT'?'#fff0ee':'#edf2fb'};color:${d.type==='CBT'?'var(--cbt)':'var(--pbt)'}">${d.type}</span></td>
+      <td class="td-num">${d.written_applicants?d.written_applicants.toLocaleString():'-'}</td>
+      <td class="td-num">${d.written_passed?d.written_passed.toLocaleString():'-'}</td>
+      <td class="td-num td-rate written">${d.written_rate||'-'}%</td>
+      <td class="td-num">${d.practical_applicants?d.practical_applicants.toLocaleString():'-'}</td>
+      <td class="td-num">${d.practical_passed?d.practical_passed.toLocaleString():'-'}</td>
+      <td class="td-num td-rate practical">${d.practical_rate||'-'}%</td>
+    </tr>`).join('');
+
+  document.getElementById('contentArea').innerHTML=`
+    <div class="table-wrap anim">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>종목</th><th>연도</th><th>회차</th><th>유형</th>
+            <th>필기 응시</th><th>필기 합격</th><th>필기 합격률</th>
+            <th>실기 응시</th><th>실기 합격</th><th>실기 합격률</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
 function copyURL(){
   const btn=document.getElementById('copyBtn');
-  const url=window.location.href;
-  navigator.clipboard.writeText(url).catch(()=>{
+  navigator.clipboard.writeText(window.location.href).catch(()=>{
     const t=document.createElement('textarea');
-    t.value=url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
+    t.value=window.location.href; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
   });
   btn.classList.add('copied'); btn.querySelector('span').textContent='복사됨!';
   setTimeout(()=>{btn.classList.remove('copied'); btn.querySelector('span').textContent='링크 복사';},2000);
 }
 
-// 시작
 loadData();
 </script>
 </body>
