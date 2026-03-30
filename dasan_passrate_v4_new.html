@@ -783,52 +783,91 @@ function renderRound(){
 }
 
 async function captureCard(){
-  const el=document.getElementById('captureArea');
-  if(!el) return;
   const btn=document.getElementById('captureBtn');
   btn.textContent='⏳ 저장 중...';btn.disabled=true;
 
-  // 카드 수에 맞게 그리드 컬럼 고정 (여백 제거)
-  const cardGrid=document.getElementById('roundCards');
-  const cardCount=cardGrid.querySelectorAll('.round-card').length;
-  const cols=Math.min(cardCount,4); // 최대 4열
-  const prevGrid=cardGrid.style.gridTemplateColumns;
-  cardGrid.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+  const yr=document.getElementById('selYear').value;
+  const rd=document.getElementById('selRound').value;
+  const rdLabel=rd==='all'?'연간전체':rd;
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
-  // 저장 버튼 숨기기
-  const footer=el.querySelector('.capture-footer');
-  footer.style.display='none';
+  // 카드 수 기준으로 너비 계산
+  const names=[...selectedNames];
+  const cardW=220, gap=12, pad=24;
+  const cols=Math.min(names.length,4);
+  const totalW=cols*cardW+(cols-1)*gap+pad*2;
 
-  // 캡처 전 강제 리플로우
-  el.style.width=el.offsetWidth+'px';
+  // 카드 HTML 완전 인라인 스타일로 생성
+  const cardsHtml=names.map(name=>{
+    let data=RAW.filter(d=>d.name===name&&d.year===yr&&(rd==='all'||d.round===rd));
+    if(!data.length) return `
+      <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;background:#fff;position:relative;overflow:hidden;width:${cardW}px">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
+        <div style="font-size:13px;font-weight:700;color:#1a3a6b;margin-bottom:8px">${name}</div>
+        <div style="color:#8b92a8;font-size:11px;text-align:center;padding:12px 0">해당 회차 데이터 없음</div>
+      </div>`;
+    const wa=data.reduce((s,d)=>s+d.written_applicants,0);
+    const wp=data.reduce((s,d)=>s+d.written_passed,0);
+    const pa=data.reduce((s,d)=>s+d.practical_applicants,0);
+    const pp=data.reduce((s,d)=>s+d.practical_passed,0);
+    const wr=wa>0?((wp/wa)*100).toFixed(1):null;
+    const pr=pa>0?((pp/pa)*100).toFixed(1):null;
+    const types=[...new Set(data.map(d=>d.type))].join('/');
+    const isCBT=types.includes('CBT');
+    return `
+      <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;background:#fff;position:relative;overflow:hidden;width:${cardW}px">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
+        <div style="font-size:13px;font-weight:700;color:#1a3a6b;margin-bottom:6px">${name}</div>
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;margin-bottom:8px;background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">필기 응시</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wa?wa.toLocaleString():'-'}명</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">필기 합격</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wp?wp.toLocaleString():'-'}명</span></div>
+        <div style="border-top:1px solid #f0f2f5;padding-top:8px;margin-bottom:${pa?'12px':'0'}">
+          <span style="font-size:22px;font-weight:900;color:#0091db">${wr?wr+'%':'-'}</span>
+          <span style="font-size:11px;color:#8b92a8;margin-left:4px">필기합격률</span>
+        </div>
+        ${pa?`
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">실기 응시</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pa.toLocaleString()}명</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">실기 합격</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pp.toLocaleString()}명</span></div>
+        <div style="border-top:1px solid #f0f2f5;padding-top:8px">
+          <span style="font-size:22px;font-weight:900;color:#1a9e5e">${pr?pr+'%':'-'}</span>
+          <span style="font-size:11px;color:#8b92a8;margin-left:4px">실기합격률</span>
+        </div>`:''}
+      </div>`;
+  }).join('');
+
+  // 캡처용 독립 DOM 생성
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText=`position:fixed;left:-9999px;top:0;width:${totalW}px;background:#fff;font-family:'Noto Sans KR',sans-serif;padding:${pad}px;box-sizing:border-box`;
+  wrapper.innerHTML=`
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #0091db">
+      <div>
+        <div style="font-size:20px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px">${yr}년 ${rdLabel} 합격률 현황</div>
+        <div style="font-size:12px;color:#8b92a8;margin-top:4px">국가기술자격 필기시험 채점 결과 · 발표일 ${dateStr}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:13px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
+        <div style="font-size:10px;color:#8b92a8;margin-top:2px">출처 · 한국산업인력공단</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:${gap}px;flex-wrap:wrap">${cardsHtml}</div>
+    <div style="margin-top:14px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
+      ※ 데이터 출처: 한국산업인력공단 · 다산에듀 교육연구소 제공
+    </div>`;
+  document.body.appendChild(wrapper);
 
   try{
-    const canvas=await html2canvas(el,{
-      scale:3,
-      backgroundColor:'#ffffff',
-      useCORS:true,
-      allowTaint:true,
-      logging:false,
-      imageTimeout:0,
-      onclone:(doc)=>{
-        // CSS 변수 인라인으로 치환
-        const clonedEl=doc.getElementById('captureArea');
-        clonedEl.style.fontFamily="'Noto Sans KR',sans-serif";
-      }
+    const canvas=await html2canvas(wrapper,{
+      scale:3,backgroundColor:'#ffffff',useCORS:true,allowTaint:true,logging:false,
+      width:totalW,height:wrapper.scrollHeight
     });
     const a=document.createElement('a');
-    const yr=document.getElementById('selYear').value;
-    const rd=document.getElementById('selRound').value;
-    const rdLabel=rd==='all'?'연간전체':rd;
     a.download=`다산에듀_합격률_${yr}년_${rdLabel}.png`;
     a.href=canvas.toDataURL('image/png',1.0);
     a.click();
   }catch(e){alert('저장 실패: '+e.message);}
 
-  // 복원
-  footer.style.display='flex';
-  cardGrid.style.gridTemplateColumns=prevGrid;
-  el.style.width='';
+  document.body.removeChild(wrapper);
   btn.textContent='📸 이미지로 저장';btn.disabled=false;
 }
 
