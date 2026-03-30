@@ -753,11 +753,11 @@ function renderRound(){
         <span class="rc-type" style="background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'var(--cbt)':'var(--pbt)'}">${types}</span>
         <div class="rc-row"><span class="rc-label">필기 응시</span><span class="rc-val">${wa?wa.toLocaleString():'-'}명</span></div>
         <div class="rc-row"><span class="rc-label">필기 합격</span><span class="rc-val">${wp?wp.toLocaleString():'-'}명</span></div>
-        <div class="rc-rate">${wr?wr+'%':'-'} <span class="rc-rate-label">필기합격률</span></div>
-        ${pa?`<div class="rc-prac">
+        <div class="rc-rate" style="font-size:16px;font-weight:800;color:#0091db;margin-top:6px;padding-top:6px;border-top:1px solid #f0f2f5;display:flex;align-items:baseline;gap:5px">${wr?wr+'%':'-'} <span style="font-size:10px;font-weight:400;color:#8b92a8">필기합격률</span></div>
+        ${pa?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid #f0f2f5">
           <div class="rc-row"><span class="rc-label">실기 응시</span><span class="rc-val">${pa.toLocaleString()}명</span></div>
           <div class="rc-row"><span class="rc-label">실기 합격</span><span class="rc-val">${pp.toLocaleString()}명</span></div>
-          <div class="rc-rate" style="color:var(--green)">${pr?pr+'%':'-'} <span class="rc-rate-label">실기합격률</span></div>
+          <div style="font-size:16px;font-weight:800;color:#1a9e5e;margin-top:6px;padding-top:6px;border-top:1px solid #f0f2f5;display:flex;align-items:baseline;gap:5px">${pr?pr+'%':'-'} <span style="font-size:10px;font-weight:400;color:#8b92a8">실기합격률</span></div>
         </div>`:''}
       </div>`;
   }).join('');
@@ -787,21 +787,48 @@ async function captureCard(){
   if(!el) return;
   const btn=document.getElementById('captureBtn');
   btn.textContent='⏳ 저장 중...';btn.disabled=true;
-  // footer(저장버튼)는 숨기고 캡처
+
+  // 카드 수에 맞게 그리드 컬럼 고정 (여백 제거)
+  const cardGrid=document.getElementById('roundCards');
+  const cardCount=cardGrid.querySelectorAll('.round-card').length;
+  const cols=Math.min(cardCount,4); // 최대 4열
+  const prevGrid=cardGrid.style.gridTemplateColumns;
+  cardGrid.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+
+  // 저장 버튼 숨기기
   const footer=el.querySelector('.capture-footer');
   footer.style.display='none';
+
+  // 캡처 전 강제 리플로우
+  el.style.width=el.offsetWidth+'px';
+
   try{
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff',useCORS:true,
-      width:el.scrollWidth,height:el.scrollHeight});
+    const canvas=await html2canvas(el,{
+      scale:3,
+      backgroundColor:'#ffffff',
+      useCORS:true,
+      allowTaint:true,
+      logging:false,
+      imageTimeout:0,
+      onclone:(doc)=>{
+        // CSS 변수 인라인으로 치환
+        const clonedEl=doc.getElementById('captureArea');
+        clonedEl.style.fontFamily="'Noto Sans KR',sans-serif";
+      }
+    });
     const a=document.createElement('a');
     const yr=document.getElementById('selYear').value;
     const rd=document.getElementById('selRound').value;
     const rdLabel=rd==='all'?'연간전체':rd;
     a.download=`다산에듀_합격률_${yr}년_${rdLabel}.png`;
-    a.href=canvas.toDataURL('image/png');
+    a.href=canvas.toDataURL('image/png',1.0);
     a.click();
   }catch(e){alert('저장 실패: '+e.message);}
+
+  // 복원
   footer.style.display='flex';
+  cardGrid.style.gridTemplateColumns=prevGrid;
+  el.style.width='';
   btn.textContent='📸 이미지로 저장';btn.disabled=false;
 }
 
