@@ -141,17 +141,23 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .capture-subtitle{font-size:11px;color:var(--text-muted);margin-top:3px}
 .capture-brand-name{font-size:12px;font-weight:700;color:var(--dasan);text-align:right}
 .capture-brand-sub{font-size:9px;color:var(--text-muted);text-align:right;margin-top:2px}
-.round-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.round-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .round-card{border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;background:#fff}
 .round-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--dasan),var(--dasan-light))}
-.rc-name{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:6px}
-.rc-type{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;margin-bottom:6px}
-.rc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.rc-label{font-size:10px;color:var(--text-muted)}
+.rc-name{font-size:14px;font-weight:700;color:var(--brand);margin-bottom:10px}
+.rc-block-w{background:#edf5fc;border-radius:8px;padding:10px;margin-bottom:8px}
+.rc-block-p{background:#edf7f2;border-radius:8px;padding:10px}
+.rc-block-title{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.rc-block-label{font-size:13px;font-weight:700;color:#0071aa}
+.rc-block-label-p{font-size:13px;font-weight:700;color:#0f6e56}
+.rc-type{font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px}
+.rc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.rc-label{font-size:11px;color:var(--text-muted)}
 .rc-val{font-size:11px;font-weight:600;color:var(--text)}
-.rc-rate{font-size:16px;font-weight:800;color:var(--dasan);margin-top:6px;padding-top:6px;border-top:1px solid var(--border-light);display:flex;align-items:baseline;gap:5px}
-.rc-rate-label{font-size:10px;font-weight:400;color:var(--text-muted)}
-.rc-prac{margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light)}
+.rc-divider-w{border-top:0.5px solid #c5dff0;padding-top:8px;margin-top:8px}
+.rc-divider-p{border-top:0.5px solid #b0ddc8;padding-top:8px;margin-top:8px}
+.rc-rate-w{font-size:24px;font-weight:800;color:#0091db}
+.rc-rate-p{font-size:24px;font-weight:800;color:#1a9e5e}
 .rc-no-data{color:var(--text-muted);font-size:11px;text-align:center;padding:12px 0}
 .capture-footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center}
 .capture-footer-txt{font-size:10px;color:var(--text-muted)}
@@ -597,6 +603,49 @@ function onSearchClick(){
   renderRound();
 }
 
+function makeCard(name, types, isCBT, wa, wp, wr, pa, pp, pr){
+  return `
+    <div class="round-card">
+      <div class="rc-name">${name}</div>
+      <div class="rc-block-w">
+        <div class="rc-block-title">
+          <span class="rc-block-label">필기 합격률</span>
+          <span class="rc-type" style="background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
+        </div>
+        <div class="rc-row"><span class="rc-label">응시인원</span><span class="rc-val">${wa?wa.toLocaleString():'-'}명</span></div>
+        <div class="rc-row"><span class="rc-label">합격인원</span><span class="rc-val">${wp?wp.toLocaleString():'-'}명</span></div>
+        <div class="rc-divider-w"><span class="rc-rate-w">${wr?wr+'%':'-'}</span></div>
+      </div>
+      ${pa?`<div class="rc-block-p">
+        <div class="rc-block-title"><span class="rc-block-label-p">실기 합격률</span></div>
+        <div class="rc-row"><span class="rc-label">응시인원</span><span class="rc-val">${pa.toLocaleString()}명</span></div>
+        <div class="rc-row"><span class="rc-label">합격인원</span><span class="rc-val">${pp.toLocaleString()}명</span></div>
+        <div class="rc-divider-p"><span class="rc-rate-p">${pr?pr+'%':'-'}</span></div>
+      </div>`:''}
+    </div>`;}
+
+function makeCardInline(name, types, isCBT, wa, wp, wr, pa, pp, pr, cardW){
+  return `
+    <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;position:relative;overflow:hidden;width:${cardW}px;background:#fff">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
+      <div style="font-size:14px;font-weight:700;color:#1a3a6b;margin-bottom:10px">${name}</div>
+      <div style="background:#edf5fc;border-radius:8px;padding:10px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:700;color:#0071aa">필기 합격률</span>
+          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">응시인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wa?wa.toLocaleString():'-'}명</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">합격인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wp?wp.toLocaleString():'-'}명</span></div>
+        <div style="border-top:0.5px solid #c5dff0;padding-top:8px"><span style="font-size:24px;font-weight:800;color:#0091db">${wr?wr+'%':'-'}</span></div>
+      </div>
+      ${pa?`<div style="background:#edf7f2;border-radius:8px;padding:10px">
+        <div style="font-size:13px;font-weight:700;color:#0f6e56;margin-bottom:8px">실기 합격률</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">응시인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pa.toLocaleString()}명</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">합격인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pp.toLocaleString()}명</span></div>
+        <div style="border-top:0.5px solid #b0ddc8;padding-top:8px"><span style="font-size:24px;font-weight:800;color:#1a9e5e">${pr?pr+'%':'-'}</span></div>
+      </div>`:''}
+    </div>`;}
+
 function render(){
   if(currentTab==='chart') renderChart();
   else renderRound();
@@ -715,8 +764,7 @@ function renderChart(){
       }},
       scales:{
         x:{grid:{color:gc},ticks:{maxRotation:45,minRotation:0,font:{size:10}}},
-        y:{grid:{color:gc},min:0,max:100,ticks:{callback:v=>v+'%'},position:'left'},
-        y2:{grid:{display:false},min:0,max:100,ticks:{callback:v=>v+'%'},position:'right'}
+        y:{grid:{color:gc},min:0,max:100,ticks:{callback:v=>v+'%'},position:'left'}
       }}
   });
 
@@ -746,8 +794,7 @@ function renderChart(){
       }},
       scales:{
         x:{grid:{color:gc},ticks:{maxRotation:45,minRotation:0,font:{size:10}}},
-        y:{grid:{color:gc},ticks:{callback:v=>fmt(v)},position:'left'},
-        y2:{grid:{display:false},ticks:{callback:v=>fmt(v)},position:'right'}
+        y:{grid:{color:gc},ticks:{callback:v=>fmt(v)},position:'left'}
       }}
   });
 }
@@ -866,36 +913,23 @@ function renderRound(){
     const pr=pa>0?((pp/pa)*100).toFixed(1):null;
     const types=[...new Set(data.map(d=>d.type))].join('/');
     const isCBT=types.includes('CBT');
-    return `
-      <div class="round-card">
-        <div class="rc-name">${name}</div>
-        <span class="rc-type" style="background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'var(--cbt)':'var(--pbt)'}">${types}</span>
-        <div class="rc-row"><span class="rc-label">필기 응시</span><span class="rc-val">${wa?wa.toLocaleString():'-'}명</span></div>
-        <div class="rc-row"><span class="rc-label">필기 합격</span><span class="rc-val">${wp?wp.toLocaleString():'-'}명</span></div>
-        <div class="rc-rate" style="font-size:16px;font-weight:800;color:#0091db;margin-top:6px;padding-top:6px;border-top:1px solid #f0f2f5;display:flex;align-items:baseline;gap:5px">${wr?wr+'%':'-'} <span style="font-size:10px;font-weight:400;color:#8b92a8">필기합격률</span></div>
-        ${pa?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid #f0f2f5">
-          <div class="rc-row"><span class="rc-label">실기 응시</span><span class="rc-val">${pa.toLocaleString()}명</span></div>
-          <div class="rc-row"><span class="rc-label">실기 합격</span><span class="rc-val">${pp.toLocaleString()}명</span></div>
-          <div style="font-size:16px;font-weight:800;color:#1a9e5e;margin-top:6px;padding-top:6px;border-top:1px solid #f0f2f5;display:flex;align-items:baseline;gap:5px">${pr?pr+'%':'-'} <span style="font-size:10px;font-weight:400;color:#8b92a8">실기합격률</span></div>
-        </div>`:''}
-      </div>`;
+    return makeCard(name, types, isCBT, wa, wp, wr, pa, pp, pr);
   }).join('');
 
   document.getElementById('contentArea').innerHTML=`
     <div class="capture-wrap anim" id="captureArea">
       <div class="capture-header">
         <div>
-          <div class="capture-title">${yr}년 ${rdLabel} 합격률 현황</div>
-          <div class="capture-subtitle">국가기술자격 필기시험 채점 결과 · 배포일 ${dateStr}</div>
+          <div class="capture-title">${yr}년 ${rdLabel} 합격률</div>
+          <div class="capture-subtitle">배포일 ${dateStr}</div>
         </div>
         <div>
           <div class="capture-brand-name">다산에듀 교육연구소</div>
-          <div class="capture-brand-sub">출처 · 한국산업인력공단</div>
         </div>
       </div>
       <div class="round-cards" id="roundCards">${cards}</div>
       <div class="capture-footer">
-        <div class="capture-footer-txt">※ 데이터 출처: 한국산업인력공단 · 다산에듀 교육연구소 제공</div>
+        <div class="capture-footer-txt">※ 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span></div>
         <div style="display:flex;gap:8px">
           <button class="capture-btn" id="captureBtnEach" onclick="captureEach()" style="background:#4a5068">📸 개별 저장</button>
           <button class="capture-btn" id="captureBtn" onclick="captureCard()">📸 전체 저장</button>
@@ -934,33 +968,17 @@ async function captureEach(){
     wrapper.innerHTML=`
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:2.5px solid #0091db">
         <div>
-          <div style="font-size:16px;font-weight:800;color:#1a3a6b">${yr}년 ${rdLabel} 합격률 현황</div>
-          <div style="font-size:10px;color:#8b92a8;margin-top:3px">국가기술자격 필기시험 채점 결과 · ${dateStr}</div>
+          <div style="font-size:16px;font-weight:800;color:#1a3a6b">${yr}년 ${rdLabel} 합격률</div>
+          <div style="font-size:10px;color:#8b92a8;margin-top:3px">배포일 ${dateStr}</div>
         </div>
         <div style="text-align:right">
           <div style="font-size:11px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
-          <div style="font-size:9px;color:#8b92a8;margin-top:2px">출처 · 한국산업인력공단</div>
         </div>
       </div>
-      <div style="border:1px solid #e2e5eb;border-radius:10px;padding:16px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
-        <div style="font-size:15px;font-weight:700;color:#1a3a6b;margin-bottom:6px">${name}</div>
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:10px;background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:#8b92a8">필기 응시</span><span style="font-size:12px;font-weight:600;color:#1a1d23">${wa?wa.toLocaleString():'-'}명</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:12px;color:#8b92a8">필기 합격</span><span style="font-size:12px;font-weight:600;color:#1a1d23">${wp?wp.toLocaleString():'-'}명</span></div>
-        <div style="border-top:1px solid #f0f2f5;padding-top:10px;margin-bottom:${pa?'14px':'0'}">
-          <span style="font-size:28px;font-weight:900;color:#0091db">${wr?wr+'%':'-'}</span>
-          <span style="font-size:12px;color:#8b92a8;margin-left:5px">필기합격률</span>
-        </div>
-        ${pa?`
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:#8b92a8">실기 응시</span><span style="font-size:12px;font-weight:600;color:#1a1d23">${pa.toLocaleString()}명</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:12px;color:#8b92a8">실기 합격</span><span style="font-size:12px;font-weight:600;color:#1a1d23">${pp.toLocaleString()}명</span></div>
-        <div style="border-top:1px solid #f0f2f5;padding-top:10px">
-          <span style="font-size:28px;font-weight:900;color:#1a9e5e">${pr?pr+'%':'-'}</span>
-          <span style="font-size:12px;color:#8b92a8;margin-left:5px">실기합격률</span>
-        </div>`:''}
-      </div>
-      <div style="margin-top:10px;font-size:9px;color:#b0b8c8;text-align:right">※ 데이터 출처: 한국산업인력공단 · 다산에듀 교육연구소 제공</div>`;
+      ${makeCardInline(name,types,isCBT,wa,wp,wr,pa,pp,pr,cardW)}
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
+        ※ 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
+      </div>`;
     document.body.appendChild(wrapper);
 
     try{
@@ -994,42 +1012,23 @@ async function captureCard(){
   const cols=Math.min(names.length,4);
   const totalW=cols*cardW+(cols-1)*gap+pad*2;
 
-  // 카드 HTML 완전 인라인 스타일로 생성
   const cardsHtml=names.map(name=>{
     let data=RAW.filter(d=>d.name===name&&d.year===yr&&(rd==='all'||d.round===rd));
     if(!data.length) return `
       <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;background:#fff;position:relative;overflow:hidden;width:${cardW}px">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
-        <div style="font-size:13px;font-weight:700;color:#1a3a6b;margin-bottom:8px">${name}</div>
+        <div style="font-size:14px;font-weight:700;color:#1a3a6b;margin-bottom:10px">${name}</div>
         <div style="color:#8b92a8;font-size:11px;text-align:center;padding:12px 0">해당 회차 데이터 없음</div>
       </div>`;
-    const wa=data.reduce((s,d)=>s+d.written_applicants,0);
-    const wp=data.reduce((s,d)=>s+d.written_passed,0);
-    const pa=data.reduce((s,d)=>s+d.practical_applicants,0);
-    const pp=data.reduce((s,d)=>s+d.practical_passed,0);
+    const wa=data.reduce((s,d)=>s+(d.written_applicants||0),0);
+    const wp=data.reduce((s,d)=>s+(d.written_passed||0),0);
+    const pa=data.reduce((s,d)=>s+(d.practical_applicants||0),0);
+    const pp=data.reduce((s,d)=>s+(d.practical_passed||0),0);
     const wr=wa>0?((wp/wa)*100).toFixed(1):null;
     const pr=pa>0?((pp/pa)*100).toFixed(1):null;
     const types=[...new Set(data.map(d=>d.type))].join('/');
     const isCBT=types.includes('CBT');
-    return `
-      <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;background:#fff;position:relative;overflow:hidden;width:${cardW}px">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
-        <div style="font-size:13px;font-weight:700;color:#1a3a6b;margin-bottom:6px">${name}</div>
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;margin-bottom:8px;background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">필기 응시</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wa?wa.toLocaleString():'-'}명</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">필기 합격</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wp?wp.toLocaleString():'-'}명</span></div>
-        <div style="border-top:1px solid #f0f2f5;padding-top:8px;margin-bottom:${pa?'12px':'0'}">
-          <span style="font-size:22px;font-weight:900;color:#0091db">${wr?wr+'%':'-'}</span>
-          <span style="font-size:11px;color:#8b92a8;margin-left:4px">필기합격률</span>
-        </div>
-        ${pa?`
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">실기 응시</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pa.toLocaleString()}명</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">실기 합격</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pp.toLocaleString()}명</span></div>
-        <div style="border-top:1px solid #f0f2f5;padding-top:8px">
-          <span style="font-size:22px;font-weight:900;color:#1a9e5e">${pr?pr+'%':'-'}</span>
-          <span style="font-size:11px;color:#8b92a8;margin-left:4px">실기합격률</span>
-        </div>`:''}
-      </div>`;
+    return makeCardInline(name,types,isCBT,wa,wp,wr,pa,pp,pr,cardW);
   }).join('');
 
   // 캡처용 독립 DOM 생성
@@ -1038,17 +1037,16 @@ async function captureCard(){
   wrapper.innerHTML=`
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #0091db">
       <div>
-        <div style="font-size:20px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px">${yr}년 ${rdLabel} 합격률 현황</div>
-        <div style="font-size:12px;color:#8b92a8;margin-top:4px">국가기술자격 필기시험 채점 결과 · 배포일 ${dateStr}</div>
+        <div style="font-size:20px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px">${yr}년 ${rdLabel} 합격률</div>
+        <div style="font-size:11px;color:#8b92a8;margin-top:4px">배포일 ${dateStr}</div>
       </div>
       <div style="text-align:right">
         <div style="font-size:13px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
-        <div style="font-size:10px;color:#8b92a8;margin-top:2px">출처 · 한국산업인력공단</div>
       </div>
     </div>
     <div style="display:flex;gap:${gap}px;flex-wrap:wrap">${cardsHtml}</div>
     <div style="margin-top:14px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
-      ※ 데이터 출처: 한국산업인력공단 · 다산에듀 교육연구소 제공
+      ※ 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
     </div>`;
   document.body.appendChild(wrapper);
 
