@@ -779,44 +779,30 @@ function renderChart(){
       }}
   });
 
-  const barValues=pts.flatMap(d=>[
-    d.wa===null?null:d.wa,
-    d.wp===null?null:d.wp,
-    d.pa===null?null:d.pa,
-    d.pp===null?null:d.pp,
-  ]).filter(v=>v!==null);
-  const maxBarValue=barValues.length?Math.max(...barValues):0;
-  const barAxisMax=maxBarValue>0?Math.ceil(maxBarValue/10000)*10000:10000;
+  const barValues=pts.flatMap(d=>[d.wa,d.wp,d.pa,d.pp]).filter(v=>v!==null&&v!==undefined);
+  const barMaxRaw=barValues.length?Math.max(...barValues):0;
+  function calcNiceAxisMax(n){
+    if(!n||n<=0) return 100;
+    const magnitude=Math.pow(10,Math.floor(Math.log10(n)));
+    const normalized=n/magnitude;
+    let niceNormalized=10;
+    if(normalized<=1) niceNormalized=1;
+    else if(normalized<=2) niceNormalized=2;
+    else if(normalized<=5) niceNormalized=5;
+    return niceNormalized*magnitude;
+  }
+  const barAxisMax=calcNiceAxisMax(barMaxRaw);
 
   if(chartBar) chartBar.destroy();
-  const mirrorRightYAxisPlugin={
-    id:'mirrorRightYAxisPlugin',
-    afterDraw(chart){
-      const {ctx, chartArea, scales}=chart;
-      const y=scales.y;
-      if(!y) return;
-      const ticks=(y.ticks||[]).map(t=>t.value);
-      ctx.save();
-      ctx.fillStyle='#8b92a8';
-      ctx.font="11px 'Noto Sans KR',sans-serif";
-      ctx.textAlign='left';
-      ctx.textBaseline='middle';
-      ticks.forEach(v=>{
-        const py=y.getPixelForValue(v);
-        ctx.fillText(fmt(v), chartArea.right + 10, py);
-      });
-      ctx.restore();
-    }
-  };
   chartBar=new Chart(document.getElementById('chartBar').getContext('2d'),{
     type:'bar',
     data:{labels,datasets:[
       {label:'필기 응시자',data:pts.map(d=>d.wa===null?null:d.wa),backgroundColor:'#0091db',borderRadius:3,borderSkipped:false,yAxisID:'y'},
       {label:'필기 합격자',data:pts.map(d=>d.wp===null?null:d.wp),backgroundColor:'#66c2f0',borderRadius:3,borderSkipped:false,yAxisID:'y'},
-      {label:'실기 응시자',data:pts.map(d=>d.pa===null?null:d.pa),backgroundColor:'#e8412e',borderRadius:3,borderSkipped:false,yAxisID:'y'},
-      {label:'실기 합격자',data:pts.map(d=>d.pp===null?null:d.pp),backgroundColor:'#f4967e',borderRadius:3,borderSkipped:false,yAxisID:'y'},
+      {label:'실기 응시자',data:pts.map(d=>d.pa===null?null:d.pa),backgroundColor:'#e8412e',borderRadius:3,borderSkipped:false,yAxisID:'y2'},
+      {label:'실기 합격자',data:pts.map(d=>d.pp===null?null:d.pp),backgroundColor:'#f4967e',borderRadius:3,borderSkipped:false,yAxisID:'y2'},
     ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},layout:{padding:{right:46}},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1a1d23',bodyColor:'#4a5068',borderColor:'#e2e5eb',borderWidth:1,padding:10,
         callbacks:{
           label:ctx=>{
@@ -833,9 +819,9 @@ function renderChart(){
       }},
       scales:{
         x:{grid:{color:gc},ticks:{maxRotation:45,minRotation:0,font:{size:10}}},
-        y:{grid:{color:gc},position:'left',min:0,max:barAxisMax,ticks:{stepSize:barAxisMax/7,callback:v=>fmt(v)}}
-      }},
-    plugins:[mirrorRightYAxisPlugin]
+        y:{grid:{color:gc},ticks:{callback:v=>fmt(v)},position:'left',min:0,max:barAxisMax},
+        y2:{grid:{display:false},ticks:{callback:v=>fmt(v)},position:'right',min:0,max:barAxisMax}
+      }}
   });
 }
 
