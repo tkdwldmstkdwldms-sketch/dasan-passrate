@@ -922,12 +922,13 @@ function renderRound(){
   document.getElementById('contentArea').innerHTML=`
     <div class="capture-wrap anim" id="captureArea">
       <div class="capture-header">
-        <div>
+        <div style="flex:1">
           <div class="capture-title">${yr}년 ${rdLabel} 합격률</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
             <div class="capture-subtitle">배포일 ${dateStr}</div>
             <div class="capture-brand-name">다산에듀 교육연구소</div>
           </div>
+        </div>
       </div>
       <div class="round-cards" id="roundCards">${cards}</div>
       <div class="capture-footer">
