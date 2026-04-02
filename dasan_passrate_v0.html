@@ -304,7 +304,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">다산에듀 교육연구소</div>
-    <div class="footer-copy">© 2025 다산에듀 교육연구소 · 데이터 출처: 한국산업인력공단 · 무단 전재 및 재배포 금지</div>
+    <div class="footer-copy">© <span id="footerYear"></span> 다산에듀 교육연구소 · 데이터 출처: 한국산업인력공단 · 무단 전재 및 재배포 금지</div>
   </div>
 </footer>
 
@@ -767,7 +767,8 @@ function renderChart(){
       }},
       scales:{
         x:{grid:{color:gc},ticks:{maxRotation:45,minRotation:0,font:{size:10}}},
-        y:{grid:{color:gc},min:0,max:100,ticks:{callback:v=>v+'%'},position:'left'}
+        y:{grid:{color:gc},min:0,max:100,ticks:{callback:v=>v+'%'},position:'left'},
+        y2:{grid:{display:false},min:0,max:100,ticks:{callback:v=>v+'%'},position:'right'}
       }}
   });
 
@@ -951,7 +952,7 @@ async function captureEach(){
   const now=new Date();
   const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
   const names=[...selectedNames];
-  const cardW=280;
+  const cardW=300;
 
   for(const name of names){
     let data=RAW.filter(d=>d.name===name&&d.year===yr&&(rd==='all'||d.round===rd));
@@ -1100,6 +1101,7 @@ function copyURL(){
 }
 
 loadData();
+document.getElementById('footerYear').textContent=new Date().getFullYear();
 </script>
 </body>
 </html>
