@@ -323,7 +323,11 @@ const CATS={
   '기능장':['전기기능장'],
 };
 
-let RAW=[],YEARS=[];
+// CATS 정의 순서대로 정렬
+const CATS_ORDER=Object.values(CATS).flat();
+function sortedNames(){
+  return [...selectedNames].sort((a,b)=>CATS_ORDER.indexOf(a)-CATS_ORDER.indexOf(b));
+}
 let selectedNames=new Set();
 let selectedType='all',viewMode='year',currentTab='chart';
 let fromIdx=0,toIdx=0;
@@ -924,7 +928,7 @@ function renderRound(){
   const now=new Date();
   const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
-  const cards=[...selectedNames].map(name=>{
+  const cards=sortedNames().map(name=>{
     let data=RAW.filter(d=>d.name===name&&d.year===yr&&(isAll||d.round===rd));
     if(!data.length) return `
       <div class="round-card">
@@ -973,7 +977,7 @@ async function captureEach(){
   const rdLabel=rd==='all'?'연간전체':rd;
   const now=new Date();
   const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
-  const names=[...selectedNames];
+  const names=sortedNames();
   const cardW=300;
 
   for(const name of names){
@@ -1031,7 +1035,7 @@ async function captureCard(){
   const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
   // 카드 수 기준으로 너비 계산
-  const names=[...selectedNames];
+  const names=sortedNames();
   const cardW=220, gap=12, pad=24;
   const cols=Math.min(names.length,4);
   const totalW=cols*cardW+(cols-1)*gap+pad*2;
