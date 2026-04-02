@@ -613,7 +613,7 @@ function makeCard(name, types, isCBT, wa, wp, wr, pa, pp, pr){
       <div class="rc-block-w">
         <div class="rc-block-title">
           <span class="rc-block-label">필기 합격률</span>
-          <span class="rc-type" style="background:${typeBg};color:${typeColor};border:${typeBorder}">${types}</span>
+          <span class="rc-type" style="background:${typeBg};color:${typeColor};border:${typeBorder};vertical-align:middle">${types}</span>
         </div>
         <div class="rc-row"><span class="rc-label">응시인원</span><span class="rc-val">${wa?wa.toLocaleString():'-'}명</span></div>
         <div class="rc-row"><span class="rc-label">합격인원</span><span class="rc-val">${wp?wp.toLocaleString():'-'}명</span></div>
@@ -637,8 +637,8 @@ function makeCardInline(name, types, isCBT, wa, wp, wr, pa, pp, pr, cardW){
       <div style="font-size:14px;font-weight:700;color:#1a3a6b;margin-bottom:10px">${name}</div>
       <div style="background:#edf5fc;border-radius:8px;padding:10px;margin-bottom:8px">
         <div style="margin-bottom:8px">
-          <span style="font-size:13px;font-weight:700;color:#0071aa">필기 합격률</span>
-          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${typeBg};color:${typeColor};border:${typeBorder};margin-left:6px">${types}</span>
+          <span style="font-size:13px;font-weight:700;color:#0071aa;vertical-align:middle">필기 합격률</span>
+          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${typeBg};color:${typeColor};border:${typeBorder};margin-left:6px;vertical-align:middle">${types}</span>
         </div>
         <table style="width:100%;border:none;border-collapse:collapse;margin-bottom:8px">
           <tr><td style="font-size:11px;color:#8b92a8;padding:2px 0">응시인원</td><td style="font-size:11px;font-weight:600;color:#1a1d23;text-align:right;padding:2px 0">${wa?wa.toLocaleString():'-'}명</td></tr>
@@ -754,8 +754,8 @@ function renderChart(){
   chartLine=new Chart(document.getElementById('chartLine').getContext('2d'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'필기 합격률',data:pts.map(d=>d.wa===null?null:d.written_rate),borderColor:'#0091db',backgroundColor:'rgba(0,145,219,0.07)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#0091db',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false},
-      {label:'실기 합격률',data:pts.map(d=>d.pa===null?null:d.practical_rate),borderColor:'#e8412e',backgroundColor:'rgba(232,65,46,0.05)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#e8412e',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false}
+      {label:'필기 합격률',data:pts.map(d=>d.wa===null?null:d.written_rate),yAxisID:'y',borderColor:'#0091db',backgroundColor:'rgba(0,145,219,0.07)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#0091db',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false},
+      {label:'실기 합격률',data:pts.map(d=>d.pa===null?null:d.practical_rate),yAxisID:'y',borderColor:'#e8412e',backgroundColor:'rgba(232,65,46,0.05)',tension:0,pointRadius:3,pointHoverRadius:5,fill:true,borderWidth:2,pointBackgroundColor:'#e8412e',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#1a1d23',bodyColor:'#4a5068',borderColor:'#e2e5eb',borderWidth:1,padding:10,
