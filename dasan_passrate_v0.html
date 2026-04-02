@@ -628,23 +628,30 @@ function makeCard(name, types, isCBT, wa, wp, wr, pa, pp, pr){
     </div>`;}
 
 function makeCardInline(name, types, isCBT, wa, wp, wr, pa, pp, pr, cardW){
+  const typeBg=isCBT?'#fff0ee':'#ffffff';
+  const typeColor=isCBT?'#e8412e':'#2952a3';
+  const typeBorder=isCBT?'1px solid #ffd0c8':'1px solid #b5d4f4';
   return `
-    <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;position:relative;overflow:hidden;width:${cardW}px;background:#fff">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0091db,#33b3f0)"></div>
+    <div style="border:1px solid #e2e5eb;border-radius:10px;padding:14px;position:relative;overflow:hidden;width:${cardW}px;background:#fff;box-sizing:border-box">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#0091db"></div>
       <div style="font-size:14px;font-weight:700;color:#1a3a6b;margin-bottom:10px">${name}</div>
       <div style="background:#edf5fc;border-radius:8px;padding:10px;margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+        <div style="margin-bottom:8px">
           <span style="font-size:13px;font-weight:700;color:#0071aa">필기 합격률</span>
-          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${isCBT?'#fff0ee':'#ffffff'};color:${isCBT?'#e8412e':'#2952a3'};border:${isCBT?'none':'1px solid #b5d4f4'}">${types}</span>
+          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${typeBg};color:${typeColor};border:${typeBorder};margin-left:6px">${types}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">응시인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wa?wa.toLocaleString():'-'}명</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">합격인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wp?wp.toLocaleString():'-'}명</span></div>
+        <table style="width:100%;border:none;border-collapse:collapse;margin-bottom:8px">
+          <tr><td style="font-size:11px;color:#8b92a8;padding:2px 0">응시인원</td><td style="font-size:11px;font-weight:600;color:#1a1d23;text-align:right;padding:2px 0">${wa?wa.toLocaleString():'-'}명</td></tr>
+          <tr><td style="font-size:11px;color:#8b92a8;padding:2px 0">합격인원</td><td style="font-size:11px;font-weight:600;color:#1a1d23;text-align:right;padding:2px 0">${wp?wp.toLocaleString():'-'}명</td></tr>
+        </table>
         <div style="border-top:0.5px solid #c5dff0;padding-top:8px"><span style="font-size:24px;font-weight:800;color:#0091db">${wr?wr+'%':'-'}</span></div>
       </div>
       ${pa?`<div style="background:#edf7f2;border-radius:8px;padding:10px">
         <div style="font-size:13px;font-weight:700;color:#0f6e56;margin-bottom:8px">실기 합격률</div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">응시인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pa.toLocaleString()}명</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">합격인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${pp.toLocaleString()}명</span></div>
+        <table style="width:100%;border:none;border-collapse:collapse;margin-bottom:8px">
+          <tr><td style="font-size:11px;color:#8b92a8;padding:2px 0">응시인원</td><td style="font-size:11px;font-weight:600;color:#1a1d23;text-align:right;padding:2px 0">${pa.toLocaleString()}명</td></tr>
+          <tr><td style="font-size:11px;color:#8b92a8;padding:2px 0">합격인원</td><td style="font-size:11px;font-weight:600;color:#1a1d23;text-align:right;padding:2px 0">${pp.toLocaleString()}명</td></tr>
+        </table>
         <div style="border-top:0.5px solid #b0ddc8;padding-top:8px"><span style="font-size:24px;font-weight:800;color:#1a9e5e">${pr?pr+'%':'-'}</span></div>
       </div>`:''}
     </div>`;}
@@ -970,16 +977,15 @@ async function captureEach(){
     const wrapper=document.createElement('div');
     wrapper.style.cssText=`position:fixed;left:-9999px;top:0;width:${cardW+48}px;background:#fff;font-family:'Noto Sans KR',sans-serif;padding:24px;box-sizing:border-box`;
     wrapper.innerHTML=`
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:2.5px solid #0091db">
-        <div>
-          <div style="font-size:16px;font-weight:800;color:#1a3a6b">${yr}년 ${rdLabel} 합격률</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-            <div style="font-size:10px;color:#8b92a8">배포일 ${dateStr}</div>
-            <div style="font-size:11px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
-          </div>
+      <div style="margin-bottom:14px;padding-bottom:10px;border-bottom:2.5px solid #0091db">
+        <div style="font-size:16px;font-weight:800;color:#1a3a6b;margin-bottom:5px">${yr}년 ${rdLabel} 합격률</div>
+        <table style="width:100%;border:none;border-collapse:collapse"><tr>
+          <td style="font-size:10px;color:#8b92a8;padding:0">배포일 ${dateStr}</td>
+          <td style="font-size:11px;font-weight:700;color:#0091db;text-align:right;padding:0">다산에듀 교육연구소</td>
+        </tr></table>
       </div>
       ${makeCardInline(name,types,isCBT,wa,wp,wr,pa,pp,pr,cardW)}
-      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8;text-align:right">
         ※ 데이터 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
       </div>`;
     document.body.appendChild(wrapper);
@@ -1038,16 +1044,15 @@ async function captureCard(){
   const wrapper=document.createElement('div');
   wrapper.style.cssText=`position:fixed;left:-9999px;top:0;width:${totalW}px;background:#fff;font-family:'Noto Sans KR',sans-serif;padding:${pad}px;box-sizing:border-box`;
   wrapper.innerHTML=`
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #0091db">
-      <div>
-        <div style="font-size:20px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px">${yr}년 ${rdLabel} 합격률</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
-          <div style="font-size:11px;color:#8b92a8">배포일 ${dateStr}</div>
-          <div style="font-size:13px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
-        </div>
+    <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #0091db">
+      <div style="font-size:20px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px;margin-bottom:5px">${yr}년 ${rdLabel} 합격률</div>
+      <table style="width:100%;border:none;border-collapse:collapse"><tr>
+        <td style="font-size:11px;color:#8b92a8;padding:0">배포일 ${dateStr}</td>
+        <td style="font-size:13px;font-weight:700;color:#0091db;text-align:right;padding:0">다산에듀 교육연구소</td>
+      </tr></table>
     </div>
     <div style="display:flex;gap:${gap}px;flex-wrap:wrap">${cardsHtml}</div>
-    <div style="margin-top:14px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
+    <div style="margin-top:14px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8;text-align:right">
       ※ 데이터 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
     </div>`;
   document.body.appendChild(wrapper);
