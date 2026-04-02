@@ -896,8 +896,10 @@ function renderRound(){
       <div class="round-cards" id="roundCards">${cards}</div>
       <div class="capture-footer">
         <div class="capture-footer-txt">※ 데이터 출처: 한국산업인력공단 · 다산에듀 교육연구소 제공</div>
-        <button class="capture-btn" id="captureBtn" onclick="captureCard()">📸 전체 저장</button>
-        <button class="capture-btn" id="captureBtnEach" onclick="captureEach()" style="background:#4a5068;margin-left:6px">📸 개별 저장</button>
+        <div style="display:flex;gap:8px">
+          <button class="capture-btn" id="captureBtnEach" onclick="captureEach()" style="background:#4a5068">📸 개별 저장</button>
+          <button class="capture-btn" id="captureBtn" onclick="captureCard()">📸 전체 저장</button>
+        </div>
       </div>
     </div>`;
 }
