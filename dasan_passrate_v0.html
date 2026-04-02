@@ -640,9 +640,9 @@ function makeCardInline(name, types, isCBT, wa, wp, wr, pa, pp, pr, cardW){
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#0091db"></div>
       <div style="font-size:14px;font-weight:700;color:#1a3a6b;margin-bottom:10px">${name}</div>
       <div style="background:#edf5fc;border-radius:8px;padding:10px;margin-bottom:8px">
-        <div style="margin-bottom:8px">
-          <span style="font-size:13px;font-weight:700;color:#0071aa;vertical-align:middle">필기 합격률</span>
-          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${typeBg};color:${typeColor};border:${typeBorder};margin-left:6px;vertical-align:middle">${types}</span>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:700;color:#0071aa">필기 합격률</span>
+          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${typeBg};color:${typeColor};border:${typeBorder}">${types}</span>
         </div>
         <table style="width:100%;border:none;border-collapse:collapse;margin-bottom:8px">
           <tr><td style="font-size:11px;color:#8b92a8;padding:2px 0">응시인원</td><td style="font-size:11px;font-weight:600;color:#1a1d23;text-align:right;padding:2px 0">${wa?wa.toLocaleString():'-'}명</td></tr>
@@ -959,10 +959,10 @@ function renderRound(){
       </div>
       <div class="round-cards" id="roundCards">${cards}</div>
       <div class="capture-footer">
-        <div class="capture-footer-txt">※ 데이터 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span></div>
-        <div style="display:flex;gap:8px">
-          <button class="capture-btn" id="captureBtnEach" onclick="captureEach()" style="background:#4a5068">📸 개별 저장</button>
-          <button class="capture-btn" id="captureBtn" onclick="captureCard()">📸 전체 저장</button>
+        <div class="capture-footer-txt">※ 데이터 출처 : 한국산업인력공단</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="capture-btn" id="captureBtnEach" onclick="captureEach()" style="background:#4a5068;flex:1;min-width:80px">📸 개별 저장</button>
+          <button class="capture-btn" id="captureBtn" onclick="captureCard()" style="flex:1;min-width:80px">📸 전체 저장</button>
         </div>
       </div>
     </div>`;
@@ -1088,7 +1088,7 @@ async function captureCard(){
   }catch(e){alert('저장 실패: '+e.message);}
 
   document.body.removeChild(wrapper);
-  btn.textContent='📸 이미지로 저장';btn.disabled=false;
+  btn.textContent='📸 전체 저장';btn.disabled=false;
 }
 
 function aggByYear(data){
