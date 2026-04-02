@@ -604,13 +604,16 @@ function onSearchClick(){
 }
 
 function makeCard(name, types, isCBT, wa, wp, wr, pa, pp, pr){
+  const typeBg=isCBT?'#fff0ee':'#ffffff';
+  const typeColor=isCBT?'#e8412e':'#2952a3';
+  const typeBorder=isCBT?'none':'1px solid #b5d4f4';
   return `
     <div class="round-card">
       <div class="rc-name">${name}</div>
       <div class="rc-block-w">
         <div class="rc-block-title">
           <span class="rc-block-label">필기 합격률</span>
-          <span class="rc-type" style="background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
+          <span class="rc-type" style="background:${typeBg};color:${typeColor};border:${typeBorder}">${types}</span>
         </div>
         <div class="rc-row"><span class="rc-label">응시인원</span><span class="rc-val">${wa?wa.toLocaleString():'-'}명</span></div>
         <div class="rc-row"><span class="rc-label">합격인원</span><span class="rc-val">${wp?wp.toLocaleString():'-'}명</span></div>
@@ -632,7 +635,7 @@ function makeCardInline(name, types, isCBT, wa, wp, wr, pa, pp, pr, cardW){
       <div style="background:#edf5fc;border-radius:8px;padding:10px;margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
           <span style="font-size:13px;font-weight:700;color:#0071aa">필기 합격률</span>
-          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${isCBT?'#fff0ee':'#edf2fb'};color:${isCBT?'#e8412e':'#2952a3'}">${types}</span>
+          <span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:6px;background:${isCBT?'#fff0ee':'#ffffff'};color:${isCBT?'#e8412e':'#2952a3'};border:${isCBT?'none':'1px solid #b5d4f4'}">${types}</span>
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8b92a8">응시인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wa?wa.toLocaleString():'-'}명</span></div>
         <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8b92a8">합격인원</span><span style="font-size:11px;font-weight:600;color:#1a1d23">${wp?wp.toLocaleString():'-'}명</span></div>
@@ -921,15 +924,14 @@ function renderRound(){
       <div class="capture-header">
         <div>
           <div class="capture-title">${yr}년 ${rdLabel} 합격률</div>
-          <div class="capture-subtitle">배포일 ${dateStr}</div>
-        </div>
-        <div>
-          <div class="capture-brand-name">다산에듀 교육연구소</div>
-        </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+            <div class="capture-subtitle">배포일 ${dateStr}</div>
+            <div class="capture-brand-name">다산에듀 교육연구소</div>
+          </div>
       </div>
       <div class="round-cards" id="roundCards">${cards}</div>
       <div class="capture-footer">
-        <div class="capture-footer-txt">※ 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span></div>
+        <div class="capture-footer-txt">※ 데이터 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span></div>
         <div style="display:flex;gap:8px">
           <button class="capture-btn" id="captureBtnEach" onclick="captureEach()" style="background:#4a5068">📸 개별 저장</button>
           <button class="capture-btn" id="captureBtn" onclick="captureCard()">📸 전체 저장</button>
@@ -969,15 +971,14 @@ async function captureEach(){
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:2.5px solid #0091db">
         <div>
           <div style="font-size:16px;font-weight:800;color:#1a3a6b">${yr}년 ${rdLabel} 합격률</div>
-          <div style="font-size:10px;color:#8b92a8;margin-top:3px">배포일 ${dateStr}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:11px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
-        </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+            <div style="font-size:10px;color:#8b92a8">배포일 ${dateStr}</div>
+            <div style="font-size:11px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
+          </div>
       </div>
       ${makeCardInline(name,types,isCBT,wa,wp,wr,pa,pp,pr,cardW)}
       <div style="margin-top:12px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
-        ※ 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
+        ※ 데이터 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
       </div>`;
     document.body.appendChild(wrapper);
 
@@ -1038,15 +1039,14 @@ async function captureCard(){
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #0091db">
       <div>
         <div style="font-size:20px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px">${yr}년 ${rdLabel} 합격률</div>
-        <div style="font-size:11px;color:#8b92a8;margin-top:4px">배포일 ${dateStr}</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:13px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
-      </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+          <div style="font-size:11px;color:#8b92a8">배포일 ${dateStr}</div>
+          <div style="font-size:13px;font-weight:700;color:#0091db">다산에듀 교육연구소</div>
+        </div>
     </div>
     <div style="display:flex;gap:${gap}px;flex-wrap:wrap">${cardsHtml}</div>
     <div style="margin-top:14px;padding-top:10px;border-top:1px solid #f0f2f5;font-size:10px;color:#8b92a8">
-      ※ 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
+      ※ 데이터 출처 : 한국산업인력공단 &nbsp;/&nbsp; 배포 : <span style="color:#0091db;font-weight:700">다산에듀 교육연구소</span>
     </div>`;
   document.body.appendChild(wrapper);
 
