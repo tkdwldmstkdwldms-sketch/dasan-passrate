@@ -317,14 +317,9 @@ const SHEET_DEFS=[
   {name:'기능장',category:'기능장'},
 ];
 const COL={wa:5,wp:6,pa:8,pp:9,note:11};
-const CATS={
-  '(산업)기사':['전기기사','전기산업기사','전기공사기사','전기공사산업기사','소방설비기사(전기)','소방설비기사(기계)','소방설비산업기사(전기)','소방설비산업기사(기계)'],
-  '기능사':['전기기능사'],
-  '기능장':['전기기능장'],
-};
-
-// CATS 정의 순서대로 정렬
-const CATS_ORDER=Object.values(CATS).flat();
+// CATS는 데이터 로드 후 자동 생성
+let CATS={};
+let CATS_ORDER=[];
 function sortedNames(){
   return [...selectedNames].sort((a,b)=>CATS_ORDER.indexOf(a)-CATS_ORDER.indexOf(b));
 }
@@ -374,6 +369,14 @@ async function loadData(){
   try{
     const results=await Promise.all(SHEET_DEFS.map(s=>fetchSheet(s)));
     RAW=results.flat().filter(d=>d.name);
+
+    // 시트 탭 순서대로 CATS 자동 생성
+    CATS={};
+    SHEET_DEFS.forEach((s,i)=>{
+      const names=[...new Set(results[i].map(d=>d.name))];
+      if(names.length) CATS[s.category]=names;
+    });
+    CATS_ORDER=Object.values(CATS).flat();
     YEARS=[...new Set(RAW.map(d=>d.year))].sort();
     toIdx=YEARS.length-1;
     const maxIdx=YEARS.length-1;
