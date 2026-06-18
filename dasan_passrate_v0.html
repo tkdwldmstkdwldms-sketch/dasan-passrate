@@ -872,7 +872,7 @@ async function saveChartPage(){
 
   const W=900;
   const wrapper=document.createElement('div');
-  wrapper.style.cssText=`position:fixed;left:-9999px;top:0;width:${W}px;background:#f5f6f8;font-family:'Noto Sans KR',sans-serif;padding:20px;box-sizing:border-box`;
+  wrapper.style.cssText=`position:absolute;left:-9999px;top:0;width:${W}px;background:#f5f6f8;font-family:'Noto Sans KR',sans-serif;padding:20px;box-sizing:border-box`;
   wrapper.innerHTML=`
     <div style="background:linear-gradient(135deg,#0071aa,#0091db,#33b3f0);border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
       <div>
@@ -899,7 +899,9 @@ async function saveChartPage(){
   document.body.appendChild(wrapper);
 
   try{
-    const canvas=await html2canvas(wrapper,{scale:3,backgroundColor:'#f5f6f8',useCORS:true,allowTaint:true,logging:false,width:W,height:wrapper.scrollHeight});
+    await new Promise(r=>setTimeout(r,100));
+  const H=wrapper.getBoundingClientRect().height||wrapper.scrollHeight;
+  const canvas=await html2canvas(wrapper,{scale:3,backgroundColor:'#f5f6f8',useCORS:true,allowTaint:true,logging:false,width:W,height:H});
     const a=document.createElement('a');
     a.download=`다산에듀_합격률차트_${name}_${rangeLabel}.png`;
     a.href=canvas.toDataURL('image/png',1.0);
