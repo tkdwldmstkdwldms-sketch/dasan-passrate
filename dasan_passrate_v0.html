@@ -887,10 +887,12 @@ async function saveChartPage(){
       <div style="font-size:13px;font-weight:700;color:#1a1d23;margin-bottom:2px">합격률 추이</div>
       <div style="font-size:10px;color:#8b92a8">필기·실기 합격률 (%)</div>
       <img src="${lineImg}" style="width:100%;margin-top:10px;display:block">
-      <div style="font-size:9px;color:#b0b5c0;text-align:right;margin-top:4px">※ 끊긴 구간은 해당 회차 미시행을 의미합니다</div>
-      <div style="display:flex;gap:14px;margin-top:6px">
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:24px;height:2px;background:#0091db;border-top:2px dashed #0091db"></div><span style="font-size:10px;color:#4a5068">필기 합격률</span></div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:24px;height:2px;background:#e8412e"></div><span style="font-size:10px;color:#4a5068">실기 합격률</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:6px">
+        <div style="display:flex;gap:14px">
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:24px;height:2px;background:#0091db;border-top:2px dashed #0091db"></div><span style="font-size:10px;color:#4a5068">필기 합격률</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:24px;height:2px;background:#e8412e"></div><span style="font-size:10px;color:#4a5068">실기 합격률</span></div>
+        </div>
+        <div style="font-size:9px;color:#b0b5c0">※ 끊긴 구간은 해당 회차 미시행을 의미합니다</div>
       </div>
     </div>
     <div style="background:#fff;border:1px solid #e2e5eb;border-radius:12px;padding:16px">
