@@ -790,20 +790,11 @@ function renderChart(){
   const barMaxRaw=barValues.length?Math.max(...barValues):0;
   function calcNiceAxisMax(n){
     if(!n||n<=0) return 100;
-    const padded=n*1.15;
+    // 최대값의 1.1배를 기준으로 가장 가까운 nice값 반올림
+    const padded=n*1.1;
     const magnitude=Math.pow(10,Math.floor(Math.log10(padded)));
-    const normalized=padded/magnitude;
-    let niceNormalized=10;
-    if(normalized<=1) niceNormalized=1;
-    else if(normalized<=1.5) niceNormalized=1.5;
-    else if(normalized<=2) niceNormalized=2;
-    else if(normalized<=2.5) niceNormalized=2.5;
-    else if(normalized<=3) niceNormalized=3;
-    else if(normalized<=4) niceNormalized=4;
-    else if(normalized<=5) niceNormalized=5;
-    else if(normalized<=6) niceNormalized=6;
-    else if(normalized<=8) niceNormalized=8;
-    return niceNormalized*magnitude;
+    const step=magnitude/2;
+    return Math.ceil(padded/step)*step;
   }
   const barAxisMax=calcNiceAxisMax(barMaxRaw);
 
@@ -879,7 +870,7 @@ async function saveChartPage(){
 
   const W=900;
   const wrapper=document.createElement('div');
-  wrapper.style.cssText=`position:fixed;left:50%;top:0;transform:translateX(-50%);width:${W}px;background:#f5f6f8;font-family:'Noto Sans KR',sans-serif;padding:20px;box-sizing:border-box;z-index:-1;opacity:0`;
+  wrapper.style.cssText=`position:fixed;left:0;top:-99999px;width:${W}px;background:#f5f6f8;font-family:'Noto Sans KR',sans-serif;padding:20px;box-sizing:border-box`;
   wrapper.innerHTML=`
     <div style="background:linear-gradient(135deg,#0071aa,#0091db,#33b3f0);border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
       <div>
@@ -896,7 +887,8 @@ async function saveChartPage(){
       <div style="font-size:13px;font-weight:700;color:#1a1d23;margin-bottom:2px">합격률 추이</div>
       <div style="font-size:10px;color:#8b92a8">필기·실기 합격률 (%)</div>
       <img src="${lineImg}" style="width:100%;margin-top:10px;display:block">
-      <div style="display:flex;gap:14px;margin-top:8px">
+      <div style="font-size:9px;color:#b0b5c0;text-align:right;margin-top:4px">※ 끊긴 구간은 해당 회차 미시행을 의미합니다</div>
+      <div style="display:flex;gap:14px;margin-top:6px">
         <div style="display:flex;align-items:center;gap:5px"><div style="width:24px;height:2px;background:#0091db;border-top:2px dashed #0091db"></div><span style="font-size:10px;color:#4a5068">필기 합격률</span></div>
         <div style="display:flex;align-items:center;gap:5px"><div style="width:24px;height:2px;background:#e8412e"></div><span style="font-size:10px;color:#4a5068">실기 합격률</span></div>
       </div>
@@ -916,9 +908,13 @@ async function saveChartPage(){
   document.body.appendChild(wrapper);
 
   try{
-    await new Promise(r=>setTimeout(r,200));
-    const H=Math.max(wrapper.scrollHeight, wrapper.offsetHeight, wrapper.getBoundingClientRect().height);
-    const canvas=await html2canvas(wrapper,{scale:3,backgroundColor:'#f5f6f8',useCORS:true,allowTaint:true,logging:false,width:W,height:H,windowWidth:W,windowHeight:H});
+    // 이미지 로드 완료 대기
+    await Promise.all([...wrapper.querySelectorAll('img')].map(img=>
+      img.complete ? Promise.resolve() : new Promise(r=>{img.onload=r;img.onerror=r;})
+    ));
+    await new Promise(r=>setTimeout(r,100));
+    const H=wrapper.scrollHeight;
+    const canvas=await html2canvas(wrapper,{scale:3,backgroundColor:'#f5f6f8',useCORS:true,allowTaint:true,logging:false,width:W,height:H});
     const a=document.createElement('a');
     a.download=`다산에듀_합격률차트_${name}_${rangeLabel}.png`;
     a.href=canvas.toDataURL('image/png',1.0);
